@@ -1,22 +1,27 @@
+//Package
 package com.evanscode.app;
 
-import com.evanscode.engine.Deck;
+//Imports
+
+import com.evanscode.engine.Card;
 import com.evanscode.engine.Shoe;
 
 import java.util.Scanner;
 
+//Main app class
 public class Main {
 
+    //Declaring variables used in main
     private static Shoe shoe;
     private static Scanner scan;
-
     private static int numDecks;
 
+    //Main method for BlackJack game
     public static void main(String[] args) {
 
         //Get input from user
         scan = new Scanner(System.in);
-        System.out.println("Playing with 4 or 8 decks?");
+        System.out.println("How many decks to play with?");
         int numDecks = scan.nextInt();
 
         //Build shoe
@@ -24,8 +29,13 @@ public class Main {
         shoe.buildShoe();
 
         //Print shoe
-        for(int i = 0; i < shoe.getShoeSize(); i++) {
-            System.out.println(shoe.getCard().getCardRank() + " " +  shoe.getCard().getCardSuit());
+        for (int i = 0; i < shoe.getShoeMaxSize(); i++) {
+
+            //Get temp card variable
+            Card tempCard = shoe.getCard();
+
+            //Print
+            System.out.println(tempCard.getCardRank() + " " + tempCard.getCardSuit());
         }
     }
 }

@@ -1,5 +1,8 @@
+//Package
 package com.evanscode.engine;
 
+//ENUM for a Card SUIT
+//4 Distinct Suits
 public enum Suit {
     Hearts {
         @Override
@@ -16,8 +19,7 @@ public enum Suit {
         public boolean isBlack() {
             return false;
         }
-    },
-    Spades {
+    }, Spades {
         @Override
         public String getSuit() {
             return "Spades";
@@ -32,8 +34,7 @@ public enum Suit {
         public boolean isBlack() {
             return true;
         }
-    },
-    Diamonds {
+    }, Diamonds {
         @Override
         public String getSuit() {
             return "Diamonds";
@@ -48,8 +49,7 @@ public enum Suit {
         public boolean isBlack() {
             return false;
         }
-    },
-    Clubs {
+    }, Clubs {
         @Override
         public String getSuit() {
             return "Clubs";
@@ -66,7 +66,10 @@ public enum Suit {
         }
     };
 
+    //Abstract methods
     public abstract String getSuit();
+
     public abstract boolean isRed();
+
     public abstract boolean isBlack();
 }
