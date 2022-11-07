@@ -12,15 +12,15 @@ public class Shoe {
 
     public Shoe(final int numDecks) {
         this.numDecks = numDecks;
-        shoe = new Stack<Card>();
+        this.shoe = new Stack<Card>();
     }
 
     public Card getCard() {
-        return shoe.pop();
+        return this.shoe.pop();
     }
 
     public int getShoeSize() {
-        return shoe.size();
+        return this.shoe.size();
     }
 
     public int getNumDecks() {
@@ -28,13 +28,25 @@ public class Shoe {
     }
 
     public void buildShoe() {
+        for(int i = 0; i < numDecks; i++) {
+            Deck deck = new Deck();
+            deck.addCardsToDeck();
+            deck.shuffleDeck();
+            for(int j = 0; j < deck.getDeckSize(); j++) {
+                this.shoe.add(deck.getCardFromDeck(i));
+            }
+        }
+
+
+
+        /*
         if(numDecks == 4) {
             for(int i = 0; i < numDecks; i++) {
                 Deck deck = new Deck();
                 deck.addCardsToDeck();
                 deck.shuffleDeck();
                 for(int j = 0; j < deck.getDeckSize(); j++) {
-                    shoe.add(deck.getCardFromDeck(i));
+                    this.shoe.add(deck.getCardFromDeck(i));
                 }
             }
         } else if (numDecks == 8) {
@@ -43,10 +55,11 @@ public class Shoe {
                 deck.addCardsToDeck();
                 deck.shuffleDeck();
                 for(int j = 0; j < deck.getDeckSize(); j++) {
-                    shoe.add(deck.getCardFromDeck(i));
+                    this.shoe.add(deck.getCardFromDeck(i));
                 }
             }
         }
+        */
     }
 
 
@@ -54,7 +67,7 @@ public class Shoe {
     public java.lang.String toString() {
         return "Shoe{" +
                 "numDecks=" + numDecks +
-                ", shoe=" + shoe +
+                ", shoe=" + this.shoe +
                 '}'
                 ;
     }

@@ -25,9 +25,7 @@ public class Main {
 
         //Print shoe
         for(int i = 0; i < shoe.getShoeSize(); i++) {
-            System.out.println(shoe.getCard());
+            System.out.println(shoe.getCard().getCardRank() + " " +  shoe.getCard().getCardSuit());
         }
-
-        //TEST
     }
 }
