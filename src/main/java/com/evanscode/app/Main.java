@@ -27,5 +27,7 @@ public class Main {
         for(int i = 0; i < shoe.getShoeSize(); i++) {
             System.out.println(shoe.getCard());
         }
+
+        //TEST
     }
 }
