@@ -2,8 +2,6 @@
 package com.evanscode.app;
 
 //Imports
-
-import com.evanscode.engine.Card;
 import com.evanscode.engine.Shoe;
 
 import java.util.Scanner;
@@ -22,13 +20,24 @@ public class Main {
         //Get input from user
         scan = new Scanner(System.in);
         System.out.println("How many decks to play with?");
-        int numDecks = scan.nextInt();
+        final int numDecks = scan.nextInt();
 
         //Build shoe
         Shoe shoe = new Shoe(numDecks);
         shoe.buildShoe();
 
-        //Print shoe
+
+
+
+
+
+
+    }
+}
+
+
+        /*
+        //Deal entire shoe
         for (int i = 0; i < shoe.getShoeMaxSize(); i++) {
 
             //Get temp card variable
@@ -37,5 +46,4 @@ public class Main {
             //Print
             System.out.println(tempCard.getCardRank() + " " + tempCard.getCardSuit());
         }
-    }
-}
+        */

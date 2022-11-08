@@ -34,7 +34,7 @@ public class Deck {
         Collections.shuffle(this.deck);
     }
 
-    //Setter for adding each card in a standard 52 card deck of cards to the current deck
+    //Setter for adding each card in a standard 52 card deck of cards to the current deck (Legit order of a real deck, minus jokers)
     public void addCardsToDeck() {
         //String rank, Suit cardSuit, int value)
         this.deck.add(new Card("A", Suit.Spades));
