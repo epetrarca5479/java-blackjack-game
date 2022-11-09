@@ -14,17 +14,23 @@ public class Hand {
         this.hand = new ArrayList<>();
     }
 
-    //
+    //Add card to current hand
     public void addCardToHand(Card newCard) {
-        hand.add(newCard);
+        this.hand.add(newCard);
     }
 
+    //Get the value of current hand
     public int getHandTotal() {
-         int total = 0;
+        int total = 0;
 
          for(Card card : hand) {
-             total = total + card.getRankValue();
+             total += card.getRankValue();
          }
          return total;
+    }
+
+    //Empty hand
+    public void emptyHand() {
+        this.
     }
 }
