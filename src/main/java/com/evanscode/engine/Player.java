@@ -13,9 +13,16 @@ public class Player {
     }
 
     //Clear players hand
-    public clearHand() {
-        //this.hand
+    public void clearHand() {
+        hand.emptyHand();
     }
 
+    //Subtract the bet from a players chips
+    public void placeBet(final int bet) {
+        this.chips -= bet;
+    }
 
+    public void collectChips(final int winnings) {
+        this.chips += winnings;
+    }
 }
