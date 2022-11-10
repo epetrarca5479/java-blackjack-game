@@ -22,7 +22,7 @@ public class Hand {
     public int getHandTotal() {
         int total = 0;
 
-         for(Card card : hand) {
+         for(Card card : this.hand) {
              total += card.getRankValue();
          }
          return total;
@@ -31,5 +31,24 @@ public class Hand {
     //Empty hand
     public void emptyHand() {
         this.hand.clear();
+    }
+
+    //Checks for blackjack hand
+    public boolean hasBlackJack() {
+        if(this.hand.size() == 2) {
+            int total = 0;
+            for(Card card : this.hand) {
+                total += card.getRankValue();
+            }
+            if(total == 21) {
+                return true;
+            }
+            else {
+                return false;
+            }
+        }
+        else {
+            return false;
+        }
     }
 }

@@ -2,7 +2,9 @@
 package com.evanscode.app;
 
 //Imports
+import com.evanscode.engine.Player;
 import com.evanscode.engine.Shoe;
+import com.evanscode.engine.Table;
 
 import java.util.Scanner;
 
@@ -10,7 +12,7 @@ import java.util.Scanner;
 public class BlackJack {
 
     //Declaring variables used in main
-    private static Shoe shoe;
+    private static Table table;
     private static Scanner scan;
     private static int numDecks;
     private static int numCurrentPlayers;
@@ -21,22 +23,29 @@ public class BlackJack {
         //Get input from user
         scan = new Scanner(System.in);
 
-        //ADD OPTIONS: this will increase or decrease difficulty
+        //Create new table, and set min bet
+        table = new Table();
+        System.out.println("Enter min bet: ");
+        table.setMinBet(scan.nextInt());
+
+
+        //ADD OPTIONS later: this will increase or decrease difficulty (for now just ask num decks to use)
         System.out.println("How many decks to play with?");
         final int numDecks = scan.nextInt();
+        table.createNewShoe(numDecks);
 
-        //Build shoe
-        Shoe shoe = new Shoe(numDecks);
-        shoe.buildShoe();
-
-        //Set initial players at Table
+        //Set number of initial players at Table
         System.out.println("How many players entering the table");
+        numCurrentPlayers = scan.nextInt();
 
+        for(int i =0; i < numCurrentPlayers; i++) {
+            System.out.println("Player Name: ");
+            String playerName = scan.next();
+            int playerWallet = scan.nextInt();
+            table.addPlayer(new Player(playerName,playerWallet));
+        }
 
-
-
-
-
+        //Game starts
 
     }
 }

@@ -19,11 +19,16 @@ public class Shoe {
     public Shoe(final int numDecks) {
         this.numDecks = numDecks;
         this.shoe = new Stack<Card>();
+        this.buildShoe();
     }
 
     //Remove and return a card from the top of the stack
-    public Card getCard() {
+    public Card getNextCard() {
         return this.shoe.pop();
+    }
+
+    public Card checkNextCard() {
+        return this.shoe.peek();
     }
 
     //Get the Shoe's MAX size
@@ -31,7 +36,7 @@ public class Shoe {
         return 52 * numDecks;
     }
 
-    //Get the Shoe's MAX size
+    //Get the Shoe's current size
     public int getShoeSize() {
         return this.shoe.size();
     }
@@ -42,7 +47,7 @@ public class Shoe {
     }
 
     //Creates deck(s) and add cards from deck(s) to the Shoe
-    public void buildShoe() {
+    private void buildShoe() {
         for (int i = 0; i < numDecks; i++) {
             Deck deck = new Deck();
             deck.addCardsToDeck();
