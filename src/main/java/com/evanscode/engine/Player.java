@@ -1,5 +1,7 @@
+//Package
 package com.evanscode.engine;
 
+//Class to represent a player
 public class Player {
     private String name;
     private int chips;
@@ -13,18 +15,38 @@ public class Player {
         this.hand = new Hand();
     }
 
+    public String getName() {
+        return this.name;
+    }
+
+    public int getChips() {
+        return this.chips;
+    }
+    public String getDecision() {
+        return this.decision;
+    }
+
+    public void setDecision(String decision) {
+        this.decision = decision;
+    }
+
+
     //Clear player's hand
     public void clearHand() {
-        hand.emptyHand();
+        this.hand.emptyHand();
     }
 
-    //Subtract the bet chips from a player's chips
-    public void removeChips(final int bet) {
-        this.chips -= bet;
+    public void addCard(Card newCard) {
+        this.hand.addCardToHand(newCard);
     }
 
-    //Add chip winnings to player's chips
-    public void collectChips(final int winnings) {
-        this.chips += winnings;
+    //Subtract the chips from a player's chips
+    public void removeChips(final int chips) {
+        this.chips -= chips;
+    }
+
+    //Add chips to a player's chips
+    public void addChips(final int chips) {
+        this.chips += chips;
     }
 }

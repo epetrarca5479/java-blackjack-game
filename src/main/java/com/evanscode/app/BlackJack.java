@@ -45,8 +45,13 @@ public class BlackJack {
             table.addPlayer(new Player(playerName,playerWallet));
         }
 
-        //Game starts
+        //Loop game
 
+        //Deal Cards
+        while(true) { //CHANGE LATER
+            //Get initial bets
+            for()
+        }
     }
 }
 
