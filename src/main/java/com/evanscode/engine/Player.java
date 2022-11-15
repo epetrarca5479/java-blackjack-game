@@ -7,6 +7,7 @@ public class Player {
     private int chips;
     private Hand hand;
     private String decision;
+    private int bet;
 
     //Constructor for a Player (hand is built)
     public Player(final String name, final int chips) {
@@ -26,8 +27,16 @@ public class Player {
         return this.decision;
     }
 
-    public void setDecision(String decision) {
+    public int getBet() {
+        return this.bet;
+    }
+
+    public void setDecision(final String decision) {
         this.decision = decision;
+    }
+
+    public void setBet(final int bet) {
+        this.bet = bet;
     }
 
 
@@ -36,7 +45,7 @@ public class Player {
         this.hand.emptyHand();
     }
 
-    public void addCard(Card newCard) {
+    public void addCard(final Card newCard) {
         this.hand.addCardToHand(newCard);
     }
 

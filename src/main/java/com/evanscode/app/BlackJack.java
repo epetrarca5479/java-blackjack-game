@@ -14,22 +14,19 @@ public class BlackJack {
     //Declaring variables used in main
     private static Table table;
     private static Scanner scan;
-    private static int numDecks;
     private static int numCurrentPlayers;
+
 
     //Main method for BlackJack game
     public static void main(String[] args) {
 
-        //Get input from user
+        //Initialize scanner
         scan = new Scanner(System.in);
 
-        //Create new table, and set min bet
+        //Create new table
         table = new Table();
-        System.out.println("Enter min bet: ");
-        table.setMinBet(scan.nextInt());
 
-
-        //ADD OPTIONS later: this will increase or decrease difficulty (for now just ask num decks to use)
+        //Pick number of decks to use
         System.out.println("How many decks to play with?");
         final int numDecks = scan.nextInt();
         table.createNewShoe(numDecks);
@@ -37,7 +34,6 @@ public class BlackJack {
         //Set number of initial players at Table
         System.out.println("How many players entering the table");
         numCurrentPlayers = scan.nextInt();
-
         for(int i =0; i < numCurrentPlayers; i++) {
             System.out.println("Player Name: ");
             String playerName = scan.next();
@@ -47,23 +43,9 @@ public class BlackJack {
 
         //Loop game
 
-        //Deal Cards
-        while(true) { //CHANGE LATER
-            //Get initial bets
-            for()
+        //Get bets
+        for(int i = 0; i < numCurrentPlayers; i++) {
+
         }
     }
 }
-
-
-        /*
-        //Deal entire shoe
-        for (int i = 0; i < shoe.getShoeMaxSize(); i++) {
-
-            //Get temp card variable
-            Card tempCard = shoe.getCard();
-
-            //Print
-            System.out.println(tempCard.getCardRank() + " " + tempCard.getCardSuit());
-        }
-        */
