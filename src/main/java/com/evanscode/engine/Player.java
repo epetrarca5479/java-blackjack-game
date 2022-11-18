@@ -8,6 +8,7 @@ public class Player {
     private Hand hand;
     private String decision;
     private int bet;
+    private int insurance;
 
     //Constructor for a Player (hand is built)
     public Player(final String name, final int chips) {
@@ -57,5 +58,13 @@ public class Player {
     //Add chips to a player's chips
     public void addChips(final int chips) {
         this.chips += chips;
+    }
+
+    public void setInsurance(final int insuranceBet) {
+        this.insurance = insuranceBet;
+    }
+
+    public int getInsurance() {
+        return this.insurance;
     }
 }

@@ -2,10 +2,10 @@
 package com.evanscode.app;
 
 //Imports
-import com.evanscode.engine.Player;
-import com.evanscode.engine.Shoe;
-import com.evanscode.engine.Table;
+import com.evanscode.engine.*;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Scanner;
 
 //Main app class
@@ -51,14 +51,29 @@ public class BlackJack {
                 table.setBets(i, bet);
             }
 
-            //Deal cards
-            for (int i = 0; i < numCurrentPlayers; i++) {
-                table.dealCard(i);
+            //Deal first card to players then the dealer, then the second card
+            for(int j = 0; j < 2; j++) {
+                for (int i = 0; i < numCurrentPlayers; i++) {
+                    table.dealCard(i);
+                }
+                table.dealDealerCard();
             }
 
-            //Each player plays round
-            for(int i = 0; i < numCurrentPlayers; i++) {
+            //insurance CODE LATER
 
+            //Check Dealer 21
+            final Hand potentialDealerBJ = table.getDealerCards();
+
+            if(potentialDealerBJ.hasBlackJack()) {
+                //Players lose (or draw if they have BJ)
+            }
+            else {
+                //Each player plays round
+                for(int i = 0; i < numCurrentPlayers; i++) {
+
+                    int bet = scan.nextInt();
+
+                }
             }
         }
     }
