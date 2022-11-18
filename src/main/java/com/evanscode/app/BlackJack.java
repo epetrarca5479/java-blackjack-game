@@ -16,7 +16,6 @@ public class BlackJack {
     private static Scanner scan;
     private static int numCurrentPlayers;
 
-
     //Main method for BlackJack game
     public static void main(String[] args) {
 
@@ -41,11 +40,26 @@ public class BlackJack {
             table.addPlayer(new Player(playerName,playerWallet));
         }
 
-        //Loop game
+        //Loop game ADD CODE
+        while(true) {
 
-        //Get bets
-        for(int i = 0; i < numCurrentPlayers; i++) {
+            //Get bets
+            for (int i = 0; i < numCurrentPlayers; i++) {
+                System.out.println("Place your bets: ");
+                final int bet = scan.nextInt();
 
+                table.setBets(i, bet);
+            }
+
+            //Deal cards
+            for (int i = 0; i < numCurrentPlayers; i++) {
+                table.dealCard(i);
+            }
+
+            //Each player plays round
+            for(int i = 0; i < numCurrentPlayers; i++) {
+
+            }
         }
     }
 }

@@ -26,7 +26,11 @@ public class Table {
         this.shoe = new Shoe(numDecks);
     }
 
-    public void dealCard(int playerIndex) {
+    public void dealCard(final int playerIndex) {
         this.players.get(playerIndex).addCard(this.shoe.getNextCard());
+    }
+
+    public void setBets(final int playerIndex, final int playerBet) {
+        this.players.get(playerIndex).setBet(playerBet);
     }
 }
