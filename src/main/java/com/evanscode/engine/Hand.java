@@ -7,14 +7,14 @@ import java.util.List;
 
 //Class to represent a player's hand of cards
 public class Hand {
-    private List<Card> hand;
+    private final List<Card> hand;
     //Constructor for a player's "Hand" of cards
     public Hand(){
         this.hand = new ArrayList<>();
     }
 
     //Add card to current hand
-    public void addCardToHand(Card newCard) {
+    public void addCardToHand(final Card newCard) {
         this.hand.add(newCard);
     }
 
