@@ -27,25 +27,6 @@ public class Shoe {
         return this.shoe.pop();
     }
 
-    public Card checkNextCard() {
-        return this.shoe.peek();
-    }
-
-    //Get the Shoe's MAX size
-    public int getShoeMaxSize() {
-        return 52 * this.numDecks;
-    }
-
-    //Get the Shoe's current size
-    public int getShoeSize() {
-        return this.shoe.size();
-    }
-
-    //Return the number of Decks in the Shoe
-    public int getNumDecks() {
-        return this.numDecks;
-    }
-
     //Creates deck(s) and add cards from deck(s) to the Shoe
     private void buildShoe() {
         for (int i = 0; i < this.numDecks; i++) {
