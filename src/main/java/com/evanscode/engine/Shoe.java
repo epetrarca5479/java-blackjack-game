@@ -10,10 +10,10 @@ import java.util.Stack;
 //More decks in a shoe result in an increased "House" edge.
 public class Shoe {
     //Variable for number of decks to play a shoe with.
-    private int numDecks;
+    private final int numDecks;
 
     //Multiple decks will be used to build the stack of cards
-    private Stack<Card> shoe;
+    private final Stack<Card> shoe;
 
     //Shoe constructor that takes in an int for number of decks to use. Also initializes the shoe stack.
     public Shoe(final int numDecks) {
@@ -33,7 +33,7 @@ public class Shoe {
 
     //Get the Shoe's MAX size
     public int getShoeMaxSize() {
-        return 52 * numDecks;
+        return 52 * this.numDecks;
     }
 
     //Get the Shoe's current size
@@ -43,12 +43,12 @@ public class Shoe {
 
     //Return the number of Decks in the Shoe
     public int getNumDecks() {
-        return numDecks;
+        return this.numDecks;
     }
 
     //Creates deck(s) and add cards from deck(s) to the Shoe
     private void buildShoe() {
-        for (int i = 0; i < numDecks; i++) {
+        for (int i = 0; i < this.numDecks; i++) {
             Deck deck = new Deck();
             deck.addCardsToDeck();
             deck.shuffleDeck();
@@ -62,7 +62,7 @@ public class Shoe {
     //Overriding the toString() method.
     @Override
     public java.lang.String toString() {
-        return "Shoe{" + "numDecks=" + numDecks + ", shoe=" + this.shoe + '}';
+        return "Shoe{" + "numDecks=" + this.numDecks + ", shoe=" + this.shoe + '}';
     }
 }
 

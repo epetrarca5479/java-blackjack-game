@@ -8,7 +8,7 @@ import java.util.List;
 //Class to represent a BlackJack table
 public class Table {
     private final List<Player> players;
-    private Hand dealerHand;
+    private final Hand dealerHand;
     private Shoe shoe;
 
     //Constructor for a table object
