@@ -2,48 +2,49 @@
 package com.evanscode.engine;
 
 //Imports
+
 import java.util.ArrayList;
 import java.util.List;
 
 //Class to represent a player's hand of cards
 public class Hand {
-    private final List<Card> hand;
-    //Constructor for a player's "Hand" of cards
-    public Hand(){
-        this.hand = new ArrayList<>();
-    }
+	private final List<Card> hand;
 
-    //Add card to current hand
-    public void addCardToHand(final Card newCard) {
-        this.hand.add(newCard);
-    }
+	//Constructor for a player's "Hand" of cards
+	public Hand() {
+		this.hand = new ArrayList<>();
+	}
 
-    //Get the value of current hand
-    public int getHandTotal() {
-        int total = 0;
+	//Add card to current hand
+	public void addCardToHand(final Card newCard) {
+		this.hand.add(newCard);
+	}
 
-         for(Card card : this.hand) {
-             total += card.getRankValue();
-         }
-         return total;
-    }
+	//Get the value of current hand
+	public int getHandTotal() {
+		int total = 0;
 
-    //Empty hand
-    public void emptyHand() {
-        this.hand.clear();
-    }
+		for (Card card : this.hand) {
+			total += card.getRankValue();
+		}
+		return total;
+	}
 
-    //Checks for blackjack hand
-    public boolean hasBlackJack() {
-        if(this.hand.size() == 2) {
-            int total = 0;
-            for(Card card : this.hand) {
-                total += card.getRankValue();
-            }
-            return total == 21;
-        }
-        else {
-            return false;
-        }
-    }
+	//Empty hand
+	public void emptyHand() {
+		this.hand.clear();
+	}
+
+	//Checks for blackjack hand
+	public boolean hasBlackJack() {
+		if (this.hand.size() == 2) {
+			int total = 0;
+			for (Card card : this.hand) {
+				total += card.getRankValue();
+			}
+			return total == 21;
+		} else {
+			return false;
+		}
+	}
 }

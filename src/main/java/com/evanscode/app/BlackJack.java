@@ -8,8 +8,7 @@ import com.evanscode.engine.*;
 import java.util.Scanner;
 
 //Main app class
-public class BlackJack
-{
+public class BlackJack {
 
 	//Create boolean Play loop
 	static boolean keepPlaying = true;
@@ -24,14 +23,19 @@ public class BlackJack
 		Table table = new Table();
 
 		//Pick number of decks to use and build a Shoe
-		System.out.println("How many decks to play with?"); final int numDecks = scan.nextInt();
+		System.out.println("How many decks to play with?");
+		final int numDecks = scan.nextInt();
 		table.createNewShoe(numDecks);
 
 		//Create initial players at a Table
-		System.out.println("How many players entering the table"); int numCurrentPlayers = scan.nextInt();
+		System.out.println("How many players entering the table");
+		int numCurrentPlayers = scan.nextInt();
 		for (int i = 0; i < numCurrentPlayers; i++) {
-			System.out.println("Player Name: "); String playerName = scan.next(); System.out.println("Player Wallet: ");
-			int playerWallet = scan.nextInt(); table.addPlayer(new Player(playerName, playerWallet));
+			System.out.println("Player Name: ");
+			String playerName = scan.next();
+			System.out.println("Player Wallet: ");
+			int playerWallet = scan.nextInt();
+			table.addPlayer(new Player(playerName, playerWallet));
 		}
 
 
@@ -40,7 +44,8 @@ public class BlackJack
 
 			//Get bets
 			for (int i = 0; i < numCurrentPlayers; i++) {
-				System.out.println("Place your bets: "); final int bet = scan.nextInt();
+				System.out.println("Place your bets: ");
+				final int bet = scan.nextInt();
 
 				table.setBets(i, bet);
 			}
@@ -49,7 +54,8 @@ public class BlackJack
 			for (int j = 0; j < 2; j++) {
 				for (int i = 0; i < numCurrentPlayers; i++) {
 					table.dealCard(i);
-				} table.dealDealerCard();
+				}
+				table.dealDealerCard();
 			}
 
 			//insurance CODE LATER
@@ -63,8 +69,7 @@ public class BlackJack
 					if (table.getPlayer(i).getHand().hasBlackJack()) {
 						//PUSH
 						System.out.println("Push for player: " + i + 1); // EDIT THIS
-					}
-					else {
+					} else {
 						//Remove chips from player hand
 						table.getPlayer(i).removeChips(table.getPlayer(i).getBet());
 					}
@@ -75,20 +80,20 @@ public class BlackJack
 				for (int i = 0; i < numCurrentPlayers; i++) {
 					table.getPlayer(i).clearHand();
 				}
-			}
-            else{
-					//Each player plays round
-					for (int i = 0; i < numCurrentPlayers; i++) {
+			} else {
+				//Each player plays round
+				for (int i = 0; i < numCurrentPlayers; i++) {
 
-						//Do something
-						System.out.println("Do something");
+					//Do something
+					System.out.println("Do something");
 
-					}
 				}
-
-				//Decide to keep playing
-				System.out.println("Press 'Y' to continue playing or 'N' to stop playing.");
-				String continueChar = scan.next(); keepPlaying = continueChar.equalsIgnoreCase("Y");
 			}
+
+			//Decide to keep playing
+			System.out.println("Press 'Y' to continue playing or 'N' to stop playing.");
+			String continueChar = scan.next();
+			keepPlaying = continueChar.equalsIgnoreCase("Y");
 		}
 	}
+}

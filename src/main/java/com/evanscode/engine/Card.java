@@ -2,14 +2,14 @@
 package com.evanscode.engine;
 
 //Class to represent a Card from a standard deck of Cards
-public class Card
-{
+public class Card {
 	private final String rank;
 	private final Suit cardSuit;
 
 	//Constructor for a card object
 	public Card(final String rank, final Suit cardSuit) {
-		this.rank = rank; this.cardSuit = cardSuit;
+		this.rank = rank;
+		this.cardSuit = cardSuit;
 	}
 
 	//Getter for a card's Rank

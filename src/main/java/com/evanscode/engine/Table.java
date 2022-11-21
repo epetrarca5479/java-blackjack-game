@@ -2,60 +2,60 @@
 package com.evanscode.engine;
 
 //Imports
+
 import java.util.ArrayList;
 import java.util.List;
 
 //Class to represent a BlackJack table
 public class Table {
-    private final List<Player> players;
-    private final Hand dealerHand;
-    private Shoe shoe;
-    private int totalPlayers;
+	private final List<Player> players;
+	private final Hand dealerHand;
+	private Shoe shoe;
+	private int totalPlayers;
 
-    //Constructor for a table object
-    public Table() {
-        this.players = new ArrayList<>();
-        this.dealerHand = new Hand();
-        this.totalPlayers = 0;
-    }
+	//Constructor for a table object
+	public Table() {
+		this.players = new ArrayList<>();
+		this.dealerHand = new Hand();
+		this.totalPlayers = 0;
+	}
 
-    //Method to add a Player object to the table
-    public void addPlayer(final Player newPlayer) {
-        if(this.totalPlayers < 7) {
-            this.players.add(newPlayer);
-            this.totalPlayers++;
-        }
-        else {
-            throw  new IllegalStateException("Table is full");
-        }
-    }
+	//Method to add a Player object to the table
+	public void addPlayer(final Player newPlayer) {
+		if (this.totalPlayers < 7) {
+			this.players.add(newPlayer);
+			this.totalPlayers++;
+		} else {
+			throw new IllegalStateException("Table is full");
+		}
+	}
 
-    public Player getPlayer(final int playerIndex) {
-        return this.players.get(playerIndex);
-    }
+	public Player getPlayer(final int playerIndex) {
+		return this.players.get(playerIndex);
+	}
 
-    //Method to create a new shoe using number of decks provided
-    public void createNewShoe(final int numDecks) {
-        this.shoe = new Shoe(numDecks);
-    }
+	//Method to create a new shoe using number of decks provided
+	public void createNewShoe(final int numDecks) {
+		this.shoe = new Shoe(numDecks);
+	}
 
-    public void dealCard(final int playerIndex) {
-        this.players.get(playerIndex).addCard(this.shoe.getNextCard());
-    }
+	public void dealCard(final int playerIndex) {
+		this.players.get(playerIndex).addCard(this.shoe.getNextCard());
+	}
 
-    public void setBets(final int playerIndex, final int playerBet) {
-        this.players.get(playerIndex).setBet(playerBet);
-    }
+	public void setBets(final int playerIndex, final int playerBet) {
+		this.players.get(playerIndex).setBet(playerBet);
+	}
 
-    public void dealDealerCard() {
-        this.dealerHand.addCardToHand(this.shoe.getNextCard());
-    }
+	public void dealDealerCard() {
+		this.dealerHand.addCardToHand(this.shoe.getNextCard());
+	}
 
-    public void clearDealerHand() {
-        this.dealerHand.emptyHand();
-    }
+	public void clearDealerHand() {
+		this.dealerHand.emptyHand();
+	}
 
-    public Hand getDealerCards() {
-        return this.dealerHand;
-    }
+	public Hand getDealerCards() {
+		return this.dealerHand;
+	}
 }
