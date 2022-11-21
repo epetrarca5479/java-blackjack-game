@@ -18,7 +18,7 @@ public class Shoe {
     //Shoe constructor that takes in an int for number of decks to use. Also initializes the shoe stack.
     public Shoe(final int numDecks) {
         this.numDecks = numDecks;
-        this.shoe = new Stack<Card>();
+        this.shoe = new Stack<>();
         this.buildShoe();
     }
 

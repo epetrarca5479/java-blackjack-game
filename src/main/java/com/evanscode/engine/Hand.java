@@ -40,12 +40,7 @@ public class Hand {
             for(Card card : this.hand) {
                 total += card.getRankValue();
             }
-            if(total == 21) {
-                return true;
-            }
-            else {
-                return false;
-            }
+            return total == 21;
         }
         else {
             return false;

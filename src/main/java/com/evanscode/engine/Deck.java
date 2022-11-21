@@ -12,16 +12,11 @@ import java.util.List;
 public class Deck {
 
     //Declaring variables in a deck
-    private List<Card> deck;
+    private final List<Card> deck;
 
     //Constructing a deck object by initializing an ArrayList of Cards
     public Deck() {
-        this.deck = new ArrayList<Card>();
-    }
-
-    //Getter for Returning the Deck
-    public ArrayList<Card> getDeck() {
-        return (ArrayList<Card>) this.deck;
+        this.deck = new ArrayList<>();
     }
 
     //Getter for returning the Deck's size
