@@ -23,6 +23,10 @@ public class Table {
         this.players.add(newPlayer);
     }
 
+    public Player getPlayer(final int playerIndex) {
+        return this.players.get(playerIndex);
+    }
+
     //Method to create a new shoe using number of decks provided
     public void createNewShoe(final int numDecks) {
         this.shoe = new Shoe(numDecks);

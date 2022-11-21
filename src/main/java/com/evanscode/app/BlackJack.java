@@ -4,26 +4,22 @@ package com.evanscode.app;
 //Imports
 import com.evanscode.engine.*;
 
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Scanner;
 
 //Main app class
 public class BlackJack {
 
-    //Declaring variables used in main
-    private static Table table;
-    private static Scanner scan;
-    private static int numCurrentPlayers;
+    //Create boolean Play loop
+    static boolean keepPlaying = true;
 
     //Main method for BlackJack game
     public static void main(String[] args) {
 
         //Initialize scanner
-        scan = new Scanner(System.in);
+        Scanner scan = new Scanner(System.in);
 
         //Create new table
-        table = new Table();
+        Table table = new Table();
 
         //Pick number of decks to use
         System.out.println("How many decks to play with?");
@@ -32,16 +28,18 @@ public class BlackJack {
 
         //Set number of initial players at Table
         System.out.println("How many players entering the table");
-        numCurrentPlayers = scan.nextInt();
-        for(int i =0; i < numCurrentPlayers; i++) {
+        int numCurrentPlayers = scan.nextInt();
+        for(int i = 0; i < numCurrentPlayers; i++) {
             System.out.println("Player Name: ");
             String playerName = scan.next();
             int playerWallet = scan.nextInt();
             table.addPlayer(new Player(playerName,playerWallet));
         }
 
+
+
         //Loop game ADD CODE
-        while(true) {
+        while(keepPlaying) {
 
             //Get bets
             for (int i = 0; i < numCurrentPlayers; i++) {
@@ -65,16 +63,33 @@ public class BlackJack {
             final Hand potentialDealerBJ = table.getDealerCards();
 
             if(potentialDealerBJ.hasBlackJack()) {
-                //Players lose (or draw if they have BJ)
+                //Check if player has blackjack
+                for(int i = 0; i < numCurrentPlayers; i++) {
+                    if(table.getPlayer(i).getHand().hasBlackJack()) {
+                        //PUSH
+                        System.out.println("Push for player: " + i + 1); // EDIT THIS
+                    }
+                    else {
+                        //Remove chips from player hand
+                        table.getPlayer(i).removeChips(table.getPlayer(i).getBet());
+                    }
+                }
+
             }
             else {
                 //Each player plays round
                 for(int i = 0; i < numCurrentPlayers; i++) {
 
-                    int bet = scan.nextInt();
+                    //Do something
+                    System.out.println("Do something");
 
                 }
             }
+
+            //Decide to keep playing
+            System.out.println("Press 'Y' to continue playing or 'N' to stop playing.");
+            String continueChar = scan.next();
+            keepPlaying = continueChar.equalsIgnoreCase("Y");
         }
     }
 }

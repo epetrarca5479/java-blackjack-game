@@ -76,4 +76,8 @@ public class Player {
     public int getInsurance() {
         return this.insurance;
     }
+
+    public Hand getHand() {
+        return this.hand;
+    }
 }
