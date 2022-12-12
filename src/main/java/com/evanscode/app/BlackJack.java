@@ -63,14 +63,18 @@ public class BlackJack {
 			//Check Dealer 21
 			final Hand potentialDealerBJ = table.getDealerCards();
 
+			//Dealer has BJ
 			if (potentialDealerBJ.hasBlackJack()) {
 				//Check if player has blackjack
 				for (int i = 0; i < numCurrentPlayers; i++) {
+					//Player has BJ
 					if (table.getPlayer(i).getHand().hasBlackJack()) {
-						//PUSH
-						System.out.println("Push for player: " + i + 1); // EDIT THIS
-					} else {
-						//Remove chips from player hand
+						//PUSH; Player breaks even.
+						System.out.println("Push for: " + table.getPlayer(i).getName());
+					}
+					//Player missing a BJ
+					else {
+						//Dealer Wins; Remove chips from player hand
 						table.getPlayer(i).removeChips(table.getPlayer(i).getBet());
 					}
 				}
@@ -83,10 +87,23 @@ public class BlackJack {
 			} else {
 				//Each player plays round
 				for (int i = 0; i < numCurrentPlayers; i++) {
+					boolean playerKeepsPlaying = true;
+					while(playerKeepsPlaying) {
+						//Do something
+						System.out.println("Player Turn: " + table.getPlayer(i).getName());
+						System.out.println("Cards: " + table.getPlayer(i).getHand().getCards());
+						System.out.println("Hand Total: " + table.getPlayer(i).getHand().getHandTotal());
 
-					//Do something
-					System.out.println("Do something");
-
+						//Check player blackjack
+						if(table.getPlayer(i).getHand().hasBlackJack()) {
+							//Award player chips immediately, player turn ends
+							double winnings = 1.5 * table.getPlayer(i).getBet();
+						}
+						else {
+							//Check for possible split
+							if(splitIsPossible)
+						}
+					}
 				}
 			}
 

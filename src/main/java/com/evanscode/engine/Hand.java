@@ -47,4 +47,8 @@ public class Hand {
 			return false;
 		}
 	}
+
+	public String getCards() {
+		return this.hand.toString();
+	}
 }
