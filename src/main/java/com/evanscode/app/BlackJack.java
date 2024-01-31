@@ -101,7 +101,7 @@ public class BlackJack {
 						}
 						else {
 							//Check for possible split
-							if(splitIsPossible)
+							if(splitIsPossible) //test
 						}
 					}
 				}
