@@ -53,7 +53,7 @@ public class BlackJack {
 			//Deal first card to players then the dealer, then the second card
 			for (int j = 0; j < 2; j++) {
 				for (int i = 0; i < numCurrentPlayers; i++) {
-					table.dealCard(i);
+					table.dealCard(i, 0);
 				}
 				table.dealDealerCard();
 			}
@@ -68,13 +68,13 @@ public class BlackJack {
 				//Check if player has blackjack
 				for (int i = 0; i < numCurrentPlayers; i++) {
 					//Player has BJ
-					if (table.getPlayer(i).getHand().hasBlackJack()) {
+					if (table.getPlayer(i).getHand(0).hasBlackJack()) {
 						//PUSH; Player breaks even.
 						System.out.println("Push for: " + table.getPlayer(i).getName());
 					}
 					//Player missing a BJ
 					else {
-						//Dealer Wins; Remove chips from player hand
+						//Dealer Wins; Check for insurance / Remove chips from player hand
 						table.getPlayer(i).removeChips(table.getPlayer(i).getBet());
 					}
 				}
@@ -82,35 +82,45 @@ public class BlackJack {
 				//Clear Hands
 				table.clearDealerHand();
 				for (int i = 0; i < numCurrentPlayers; i++) {
-					table.getPlayer(i).clearHand();
+                    for(int j = 0; j < table.getPlayer(j).getHandCount(); j++)
+					    table.getPlayer(i).clearHand(j);
 				}
 			} else {
 				//Each player plays round
 				for (int i = 0; i < numCurrentPlayers; i++) {
-					boolean playerKeepsPlaying = true;
-					while(playerKeepsPlaying) {
-						//Do something
-						System.out.println("Player Turn: " + table.getPlayer(i).getName());
-						System.out.println("Cards: " + table.getPlayer(i).getHand().getCards());
-						System.out.println("Hand Total: " + table.getPlayer(i).getHand().getHandTotal());
+                    boolean keepPlaying = true;
 
-						//Check player blackjack
-						if(table.getPlayer(i).getHand().hasBlackJack()) {
-							//Award player chips immediately, player turn ends
-							double winnings = 1.5 * table.getPlayer(i).getBet();
-						}
-						else {
-							//Check for possible split
-							if(splitIsPossible) //test2
-						}
-					}
+                    //Check player blackjack
+                    if(table.getPlayer(i).getHand(0).hasBlackJack()) {
+                        //Award player chips immediately, player turn ends
+                        double winnings = 1.5 * table.getPlayer(i).getBet();
+                        keepPlaying = false;
+                    }
+
+                    //Player plays hand(s)
+                    for(int j = 0; j < table.getPlayer(i).getHandCount(); j++) {
+                        while(keepPlaying) {
+                            if (table.getPlayer(i).getHandCount() == 1) {
+                                System.out.println("Player Turn: " + table.getPlayer(i).getName());
+                                System.out.println("Cards: " + table.getPlayer(i).getHand(j).getCards());
+                                System.out.println("Hand Total: " + table.getPlayer(i).getHand().getHandTotal());
+                            }
+
+                            else {
+                                //Check for possible split
+                                if(splitIsPossible) {
+                                    // Do Something
+                                }
+                            }
+
+                            //Decide to keep playing
+                            System.out.println("Press 'Y' to continue playing or 'N' to stop playing.");
+                            String continueChar = scan.next();
+                            keepPlaying = continueChar.equalsIgnoreCase("Y");
+                        }
+                    }
 				}
 			}
-
-			//Decide to keep playing
-			System.out.println("Press 'Y' to continue playing or 'N' to stop playing.");
-			String continueChar = scan.next();
-			keepPlaying = continueChar.equalsIgnoreCase("Y");
 		}
 	}
 }

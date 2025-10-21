@@ -1,26 +1,44 @@
 //Package
 package com.evanscode.engine;
 
+import java.util.ArrayList;
+import java.util.List;
+
 //Class to represent a player
 public class Player {
 	private final String name;
 	private int chips;
-	private final Hand hand;
+	private final List<Hand> hands;
 	private String move;
 	private int bet;
 	private int insurance;
+    private int splitCount;
 
 	//Constructor for a Player
 	public Player(final String name, final int chips) {
 		this.name = name;
 		this.chips = chips;
-		this.hand = new Hand();
+        this.hands = new ArrayList<>();
+        this.splitCount = 0;
 	}
 
 	//Getter for a PLayer's name
 	public String getName() {
 		return this.name;
 	}
+
+    //Reset Player split count
+    public void resetSplitCount() {
+        this.splitCount = 0;
+    }
+
+    //Increment split count
+    public void increaseSplitCount() {
+        this.splitCount++;
+    }
+
+    //Getter for number of active hands
+    public int getHandCount() { return this.hands.size(); }
 
 	//Getter for a Player's chips
 	public int getChips() {
@@ -42,19 +60,19 @@ public class Player {
 		this.move = newMove;
 	}
 
-	//Setter for a PLayer's bet
+	//Setter for a Player's bet
 	public void setBet(final int bet) {
 		this.bet = bet;
 	}
 
 	//Clear player's hand
-	public void clearHand() {
-		this.hand.emptyHand();
+	public void clearHand(int handToClear) {
+		this.hands.get(handToClear).emptyHand();
 	}
 
 	//Add a card to a Player's hand
-	public void addCard(final Card newCard) {
-		this.hand.addCardToHand(newCard);
+	public void addCard(final Card newCard, final int handToAddTo) {
+		this.hands.get(handToAddTo).addCardToHand(newCard);
 	}
 
 	//Subtract chips from Player
@@ -72,12 +90,24 @@ public class Player {
 		this.insurance = insuranceBet;
 	}
 
-	//Getter for a PLayer's insurance bet
+	//Getter for a Player's insurance bet
 	public int getInsurance() {
 		return this.insurance;
 	}
 
-	public Hand getHand() {
-		return this.hand;
+    //Getter for a players hand
+	public Hand getHand(final int handToGet) {
+		return this.hands.get(handToGet);
 	}
+
+    //Split a hand
+    public void splitHand(final Hand hand) {
+        //Cant split
+        if(!hand.canSplit(this.splitCount)) return;
+
+        //Can split, creates new hand, places 2nd card in new hand,
+        Card cardToMove = hand.removeSecondCard();
+        Hand newHand = new Hand();
+        newHand.addCardToHand(cardToMove);
+    }
 }
