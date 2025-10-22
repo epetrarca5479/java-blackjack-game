@@ -10,117 +10,111 @@ import java.util.Scanner;
 //Main app class
 public class BlackJack {
 
-	//Create boolean Play loop
-	static boolean keepPlaying = true;
+    //Create boolean Play loop
+    static boolean keepPlaying = true;
 
-	//Main method for BlackJack game
-	public static void main(String[] args) {
+    //Main method for BlackJack game
+    public static void main(String[] args) {
 
-		//Initialize scanner
-		Scanner scan = new Scanner(System.in);
+        //Initialize scanner
+        Scanner scan = new Scanner(System.in);
 
-		//Create new table
-		Table table = new Table();
+        //Create new table
+        Table table = new Table();
 
-		//Pick number of decks to use and build a Shoe
-		System.out.println("How many decks to play with?");
-		final int numDecks = scan.nextInt();
-		table.createNewShoe(numDecks);
+        //Pick number of decks to use and build a Shoe
+        System.out.println("How many decks to play with?");
+        final int numDecks = scan.nextInt();
+        table.createNewShoe(numDecks);
 
-		//Create initial players at a Table
-		System.out.println("How many players entering the table");
-		int numCurrentPlayers = scan.nextInt();
-		for (int i = 0; i < numCurrentPlayers; i++) {
-			System.out.println("Player Name: ");
-			String playerName = scan.next();
-			System.out.println("Player Wallet: ");
-			int playerWallet = scan.nextInt();
-			table.addPlayer(new Player(playerName, playerWallet));
-		}
+        //Create initial players at a Table
+        System.out.println("How many players entering the table");
+        int numCurrentPlayers = scan.nextInt();
+        for (int i = 0; i < numCurrentPlayers; i++) {
+            System.out.println("Player Name: ");
+            String playerName = scan.next();
+            System.out.println("Player Wallet: ");
+            int playerWallet = scan.nextInt();
+            table.addPlayer(new Player(playerName, playerWallet));
+        }
 
+        //Get bets
+        for (int i = 0; i < numCurrentPlayers; i++) {
+            System.out.println("Place your bets: ");
+            final int bet = scan.nextInt();
 
-		//Loop game ADD CODE
-		while (keepPlaying) {
+            table.setBets(i, bet);
+        }
 
-			//Get bets
-			for (int i = 0; i < numCurrentPlayers; i++) {
-				System.out.println("Place your bets: ");
-				final int bet = scan.nextInt();
+        //Deal first card to player(s) then the dealer, then the second card to each player
+        for (int j = 0; j < 2; j++) {
+            for (int i = 0; i < numCurrentPlayers; i++) {
+                table.dealCard(i, 0);
+            }
+            table.dealDealerCard();
 
-				table.setBets(i, bet);
-			}
+        }
 
-			//Deal first card to players then the dealer, then the second card
-			for (int j = 0; j < 2; j++) {
-				for (int i = 0; i < numCurrentPlayers; i++) {
-					table.dealCard(i, 0);
-				}
-				table.dealDealerCard();
-			}
+        //insurance CODE LATER
 
-			//insurance CODE LATER
+        //Check Dealer 21
+        final Hand potentialDealerBJ = table.getDealerCards();
 
-			//Check Dealer 21
-			final Hand potentialDealerBJ = table.getDealerCards();
+        //Dealer has BJ
+        if (potentialDealerBJ.hasBlackJack()) {
+            //Check if player has blackjack
+            for (int i = 0; i < numCurrentPlayers; i++) {
+                //Player has BJ
+                if (table.getPlayer(i).getHand(0).hasBlackJack()) {
+                    //PUSH; Player breaks even.
+                    System.out.println("Push for: " + table.getPlayer(i).getName());
+                }
+                //Player missing a BJ
+                else {
+                    //Dealer Wins; Check for insurance / Remove chips from player hand
+                    table.getPlayer(i).removeChips(table.getPlayer(i).getBet());
+                }
+            }
 
-			//Dealer has BJ
-			if (potentialDealerBJ.hasBlackJack()) {
-				//Check if player has blackjack
-				for (int i = 0; i < numCurrentPlayers; i++) {
-					//Player has BJ
-					if (table.getPlayer(i).getHand(0).hasBlackJack()) {
-						//PUSH; Player breaks even.
-						System.out.println("Push for: " + table.getPlayer(i).getName());
-					}
-					//Player missing a BJ
-					else {
-						//Dealer Wins; Check for insurance / Remove chips from player hand
-						table.getPlayer(i).removeChips(table.getPlayer(i).getBet());
-					}
-				}
+            //Clear Hands
+            table.clearDealerHand();
+            for (int i = 0; i < numCurrentPlayers; i++) {
+                for (int j = 0; j < table.getPlayer(j).getHandCount(); j++)
+                    table.getPlayer(i).clearHand(j);
+            }
+        } else {
+            //Each player plays round
+            for (int i = 0; i < numCurrentPlayers; i++) {
+                boolean keepPlaying = true;
 
-				//Clear Hands
-				table.clearDealerHand();
-				for (int i = 0; i < numCurrentPlayers; i++) {
-                    for(int j = 0; j < table.getPlayer(j).getHandCount(); j++)
-					    table.getPlayer(i).clearHand(j);
-				}
-			} else {
-				//Each player plays round
-				for (int i = 0; i < numCurrentPlayers; i++) {
-                    boolean keepPlaying = true;
+                //Check player blackjack
+                if (table.getPlayer(i).getHand(0).hasBlackJack()) {
+                    //Award player chips immediately, player turn ends
+                    double winnings = 1.5 * table.getPlayer(i).getBet();
+                    keepPlaying = false;
+                }
 
-                    //Check player blackjack
-                    if(table.getPlayer(i).getHand(0).hasBlackJack()) {
-                        //Award player chips immediately, player turn ends
-                        double winnings = 1.5 * table.getPlayer(i).getBet();
-                        keepPlaying = false;
-                    }
-
-                    //Player plays hand(s)
-                    for(int j = 0; j < table.getPlayer(i).getHandCount(); j++) {
-                        while(keepPlaying) {
-                            if (table.getPlayer(i).getHandCount() == 1) {
-                                System.out.println("Player Turn: " + table.getPlayer(i).getName());
-                                System.out.println("Cards: " + table.getPlayer(i).getHand(j).getCards());
-                                System.out.println("Hand Total: " + table.getPlayer(i).getHand().getHandTotal());
-                            }
-
-                            else {
-                                //Check for possible split
-                                if(splitIsPossible) {
-                                    // Do Something
-                                }
-                            }
-
-                            //Decide to keep playing
-                            System.out.println("Press 'Y' to continue playing or 'N' to stop playing.");
-                            String continueChar = scan.next();
-                            keepPlaying = continueChar.equalsIgnoreCase("Y");
+                //Player plays hand(s)
+                for (int j = 0; j < table.getPlayer(i).getHandCount(); j++) {
+                    while (keepPlaying) {
+                        if (table.getPlayer(i).getHandCount() == 1) {
+                            System.out.println("Player Turn: " + table.getPlayer(i).getName());
+                            System.out.println("Cards: " + table.getPlayer(i).getHand(j).getCards());
+                            System.out.println("Hand Total: " + table.getPlayer(i).getHand(j).getHandTotal());
+                            System.out.println("Dealers Card: " + table.showDealerCard());
+                        } else {
+                            //Check for possible split
+                            //if(splitIsPossible) {
+                            System.out.println("Test");
                         }
                     }
-				}
-			}
-		}
-	}
+
+                    //Decide to keep playing
+                    System.out.println("Press 'Y' to continue playing or 'N' to stop playing.");
+                    String continueChar = scan.next();
+                    keepPlaying = continueChar.equalsIgnoreCase("Y");
+                }
+            }
+        }
+    }
 }
