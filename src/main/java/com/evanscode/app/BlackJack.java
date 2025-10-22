@@ -1,19 +1,15 @@
-//Package
 package com.evanscode.app;
-
-//Imports
 
 import com.evanscode.engine.*;
 
 import java.util.Scanner;
 
-//Main app class
 public class BlackJack {
 
-    //Create boolean Play loop
+    // loop variable to continue playing
     static boolean keepPlaying = true;
 
-    //Main method for BlackJack game
+    // Main method for BlackJack game
     public static void main(String[] args) {
 
         //Initialize scanner
@@ -38,12 +34,23 @@ public class BlackJack {
             table.addPlayer(new Player(playerName, playerWallet));
         }
 
-        //Get bets
+        // Get bets
+        System.out.println("Current betting limits\nMin: " + table.getBetLimit("min") + "\nMax: " + table.getBetLimit("max"));
         for (int i = 0; i < numCurrentPlayers; i++) {
-            System.out.println("Place your bets: ");
-            final int bet = scan.nextInt();
+            //Set each player back to active
+            table.getPlayer(i).changeActive(true);
 
-            table.setBets(i, bet);
+            //Check if player has enough money in wallet for minimum bet.
+            if (table.getPlayer(i).getChips() < table.getBetLimit("min")) {
+                System.out.println(table.getPlayer(i).getName() + " has insufficient chips");
+                table.getPlayer(i).changeActive(false);
+            }
+            else {
+                System.out.println(table.getPlayer(i).getName() + " please place your bet: ");
+                final int bet = scan.nextInt();
+                table.setBets(i, bet);
+            }
+            return;
         }
 
         //Deal first card to player(s) then the dealer, then the second card to each player
@@ -52,10 +59,12 @@ public class BlackJack {
                 table.dealCard(i, 0);
             }
             table.dealDealerCard();
-
         }
 
-        //insurance CODE LATER
+        //If dealer shows an ace ask if player wants insurance
+        if (table.showDealerCard().getCardRank() == "A") {
+            for (int i = 0; i < table.)
+        }
 
         //Check Dealer 21
         final Hand potentialDealerBJ = table.getDealerCards();

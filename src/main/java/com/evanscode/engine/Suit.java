@@ -1,4 +1,3 @@
-//Package
 package com.evanscode.engine;
 
 // ENUM for a Card SUIT (4 Distinct Suits)

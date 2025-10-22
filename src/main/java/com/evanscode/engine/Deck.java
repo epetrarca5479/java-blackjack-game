@@ -1,35 +1,31 @@
-//Package
 package com.evanscode.engine;
-
-//Imports
 
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-//Class to represent a deck of cards
-//A deck is represented as a set (in this case a LIST) of 52 playing Cards
+// A deck is represented as a set (in this case a LIST) of 52 playing Cards
 public class Deck {
 
-    //Declaring variables in a deck
+    // Declaring variables in a deck
     private final List<Card> deck;
 
-    //Constructing a deck object by initializing an ArrayList of Cards
+    // Constructing a deck object by initializing an ArrayList of Cards
     public Deck() {
         this.deck = new ArrayList<>();
     }
 
-    //Getter for returning the Deck's size
+    // Getter for returning the Deck's size
     public int getDeckSize() {
         return this.deck.size();
     }
 
-    //Setter for randomizing or "shuffling" the deck
+    // Setter for randomizing or "shuffling" the deck
     public void shuffleDeck() {
         Collections.shuffle(this.deck);
     }
 
-    //Setter for adding each card in a standard 52 card deck of cards to the current deck (Legit order of a real deck, minus jokers)
+    // Setter for adding each card in a standard 52 card deck of cards to the current deck (Legit order of a real deck, minus jokers)
     public void addCardsToDeck() {
         //String rank, Suit cardSuit, int value)
         this.deck.add(new Card("A", Suit.Spades));
@@ -86,7 +82,7 @@ public class Deck {
         this.deck.add(new Card("K", Suit.Hearts));
     }
 
-    //Getter for returning a specific card from the deck
+    // Getter for returning a specific card from the deck
     public Card getCardFromDeck(final int index) {
         return this.deck.get(index);
     }

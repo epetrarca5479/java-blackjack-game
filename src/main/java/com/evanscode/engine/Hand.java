@@ -1,26 +1,23 @@
-//Package
 package com.evanscode.engine;
-
-//Imports
 
 import java.util.ArrayList;
 import java.util.List;
 
-//Class to represent a player's hand of cards
+// Class to represent a hand of cards held by a player or dealer
 public class Hand {
     private final List<Card> hand;
 
-    //Constructor for a player's "Hand" of cards
+    // Constructor for a player's "Hand" of cards
     public Hand() {
         this.hand = new ArrayList<>();
     }
 
-    //Add card to current hand
+    // Add card to current hand
     public void addCardToHand(final Card newCard) {
         this.hand.add(newCard);
     }
 
-    //Get the value of current hand
+    // Get the value of current hand
     public int getHandTotal() {
         int total = 0;
 
@@ -30,19 +27,19 @@ public class Hand {
         return total;
     }
 
-    //Empty hand
+    // Clear a hand
     public void emptyHand() {
         this.hand.clear();
     }
 
-    //Remove 2nd card
+    // Remove 2nd card
     public Card removeSecondCard() {
         Card removedCard = this.hand.get(1);
         this.hand.remove(1);
         return removedCard;
     }
 
-    //Checks for blackjack hand
+    // Checks for blackjack hand
     public boolean hasBlackJack() {
         if (this.hand.size() == 2) {
             int total = 0;
@@ -55,7 +52,7 @@ public class Hand {
         }
     }
 
-    //Checks for a possible split hand
+    // Checks for a possible split hand
     public Boolean canSplit(final int splitCount) {
         if (this.hand.size() != 2) return false; //must be a hand of 2 cards
         if (splitCount >= 3) return false; //max split of 4
@@ -63,16 +60,16 @@ public class Hand {
         Card c1 = this.hand.get(0); //Get first card
         Card c2 = this.hand.get(1); //Get second card
 
-        //Returns result when comparing card 1 to card 2s rank
+        // Returns result when comparing card 1 to card 2s rank
         return c1.getCardRank().equals(c2.getCardRank());
     }
 
-    //Returns the hand
+    // Returns the hand as a String
     public String getCards() {
         return this.hand.toString();
     }
 
-    //Returns the second card in a hand
+    // Returns the second card in a hand
     public Card getSecondCard() {
         return this.hand.get(1);
     }
