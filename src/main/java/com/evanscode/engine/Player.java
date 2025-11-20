@@ -14,6 +14,7 @@ public class Player {
     private int handCount;
     private boolean isActive;
     private int currentHandIndex;
+    private final List<String> options;
 
     // Constructor for a Player
     public Player(final String name, final int chips) {
@@ -25,12 +26,39 @@ public class Player {
         this.isActive = true;
         this.insurance = 0;
         this.currentHandIndex = 0;
+        this.options = new ArrayList<>() {{
+            add("hit");
+            add("stand");
+            add("split");
+            add("double down");
+        }};
     }
 
+    // Getter for Player choices
+    public List getOptions() {
+        return this.options;
+    }
+
+    // Remover for Player choices
+    public void removeOption(final String option) {
+        this.options.remove(option);
+    }
+
+    // Resets options
+    public void resetOptions() {
+        this.options.clear();
+        this.options.add("hit");
+        this.options.add("stand");
+        this.options.add("split");
+        this.options.add("double down");
+    }
+
+    // Getter for current hand index
     public int getCurrentHandIndex() {
         return this.currentHandIndex;
     }
 
+    // Setter for hand index
     public void setCurrentHandIndex(final int hand) {
         this.currentHandIndex = hand;
     }
@@ -127,21 +155,22 @@ public class Player {
     // Checks if insurance bet is valid
     public boolean isValidInsuranceBet(double insuranceBet, double originalBet, double balance) {
         double maxInsurance = originalBet / 2.0;
-
         if (insuranceBet > maxInsurance) {
             System.out.println("❌ Insurance bet cannot exceed half your original bet (" + maxInsurance + ").");
             return false;
-        }
-        if (insuranceBet > balance) {
-            System.out.println("❌ You don't have enough balance for that bet.");
+        } else if (insuranceBet > balance) {
+            System.out.println("❌ You don't have enough balance for that bet. \n" +
+                    "Current Balance: + " + balance + "\n" +
+                    "Desired Insurance: " + insuranceBet + "\n" +
+                    "Bet: " + originalBet
+            );
             return false;
-        }
-        if (insuranceBet <= 0) {
+        } else if (insuranceBet <= 0) {
             System.out.println("❌ Insurance bet must be greater than zero.");
             return false;
+        } else {
+            return true;
         }
-
-        return true;
     }
 
     // Getter for a Player's insurance bet

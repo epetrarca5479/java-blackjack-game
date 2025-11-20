@@ -110,7 +110,7 @@ public class BlackJack {
                     }
                 }
             }
-            //Clear Hands
+            // Clear Hands
             table.clearDealerHand();
             for (int i = 0; i < numCurrentPlayers; i++) {
                 for (int j = 0; j < table.getPlayer(j).getHandCount(); j++)
@@ -140,18 +140,18 @@ public class BlackJack {
                     }};
 
                     //Check if able to split
-                    if(!table.getPlayer(i).getHand(j).canSplit(table.getPlayer(i).getSplitCount())) {
+                    if (!table.getPlayer(i).getHand(j).canSplit(table.getPlayer(i).getSplitCount())) {
                         options.remove("split");
                     }
                     //Check if able to double down
-                    if(table.getPlayer(i).getBet() < table.getPlayer(i).getChips()) {
+                    if (table.getPlayer(i).getBet() < table.getPlayer(i).getChips()) {
                         options.remove("double");
                     }
 
                     while (keepPlaying) {
-                        //Display current hands
+                        //Display current hand
                         System.out.println(
-                            "Player: " + table.getPlayer(i).getName() +"\n" +
+                            "Player: " + table.getPlayer(i).getName() + "\n" +
                             "Hand: " + table.getPlayer(i).getHand(j).getCards() + "\n" +
                             "Hand Total: " + table.getPlayer(i).getHand(j).getHandTotal() + "\n" +
                             "Dealers Card: " + table.showDealerCard() + "\n" +
