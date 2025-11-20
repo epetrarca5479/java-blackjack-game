@@ -1,4 +1,3 @@
-//Package
 package com.evanscode.engine;
 
 import java.util.ArrayList;
@@ -7,13 +6,14 @@ import java.util.List;
 // Class to represent a player
 public class Player {
     private final String name;
-    private int chips;
+    private double chips;
     private final List<Hand> hands;
     private String move;
-    private int bet;
-    private int insurance;
-    private int splitCount;
+    private double bet;
+    private double insurance;
+    private int handCount;
     private boolean isActive;
+    private int currentHandIndex;
 
     // Constructor for a Player
     public Player(final String name, final int chips) {
@@ -21,17 +21,23 @@ public class Player {
         this.chips = chips;
         this.hands = new ArrayList<>();
         this.hands.add(new Hand()); //Add the player's initial hand
-        this.splitCount = 0;
+        this.handCount = 0;
         this.isActive = true;
+        this.insurance = 0;
+        this.currentHandIndex = 0;
+    }
+
+    public int getCurrentHandIndex() {
+        return this.currentHandIndex;
+    }
+
+    public void setCurrentHandIndex(final int hand) {
+        this.currentHandIndex = hand;
     }
 
     // Method to modify a players active status in a hand
-    public void changeActive(boolean active) {
-        if (active == true) {
-            isActive = true;
-        } else if (active == false) {
-            isActive = false;
-        }
+    public void setActive(boolean active) {
+        this.isActive = active;
     }
 
     // Method to check players active status in a current hand
@@ -44,23 +50,25 @@ public class Player {
         return this.name;
     }
 
-    // Reset Player split count
-    public void resetSplitCount() {
-        this.splitCount = 0;
+
+    // Reset Player hand count
+    public void resetHandCount() {
+        this.handCount = 0;
     }
 
-    // Increment split count
-    public void increaseSplitCount() {
-        this.splitCount++;
+    // Increment hand count
+    public void increaseHandCount() {
+        this.handCount++;
     }
 
     // Getter for number of active hands
     public int getHandCount() {
-        return this.hands.size();
+        return this.handCount;
     }
 
+
     // Getter for a Player's chips
-    public int getChips() {
+    public double getChips() {
         return this.chips;
     }
 
@@ -69,8 +77,13 @@ public class Player {
         return this.move;
     }
 
+    // Setter for a Player's move
+    public void setDecision(final String move) {
+        this.move = move;
+    }
+
     // Getter for a Player's bet
-    public int getBet() {
+    public double getBet() {
         return this.bet;
     }
 
@@ -80,8 +93,9 @@ public class Player {
     }
 
     // Setter for a Player's bet
-    public void setBet(final int bet) {
+    public void setBet(final double bet) {
         this.bet = bet;
+        removeChips(bet);
     }
 
     // Clear player's hand
@@ -95,22 +109,43 @@ public class Player {
     }
 
     // Subtract chips from Player
-    public void removeChips(final int chips) {
+    public void removeChips(final double chips) {
         this.chips -= chips;
     }
 
     // Give chips to Player
-    public void addChips(final int chips) {
+    public void addChips(final double chips) {
         this.chips += chips;
     }
 
     // Setter for a Player's insurance bet
-    public void setInsurance(final int insuranceBet) {
+    public void buyInsurance(final double insuranceBet) {
+        removeChips(insuranceBet);
         this.insurance = insuranceBet;
     }
 
+    // Checks if insurance bet is valid
+    public boolean isValidInsuranceBet(double insuranceBet, double originalBet, double balance) {
+        double maxInsurance = originalBet / 2.0;
+
+        if (insuranceBet > maxInsurance) {
+            System.out.println("❌ Insurance bet cannot exceed half your original bet (" + maxInsurance + ").");
+            return false;
+        }
+        if (insuranceBet > balance) {
+            System.out.println("❌ You don't have enough balance for that bet.");
+            return false;
+        }
+        if (insuranceBet <= 0) {
+            System.out.println("❌ Insurance bet must be greater than zero.");
+            return false;
+        }
+
+        return true;
+    }
+
     // Getter for a Player's insurance bet
-    public int getInsurance() {
+    public double getInsurance() {
         return this.insurance;
     }
 
@@ -119,20 +154,4 @@ public class Player {
         return this.hands.get(handToGet);
     }
 
-    // Split a hand
-    public void splitHand(final Hand hand) {
-        // Cant split
-        if (!hand.canSplit(this.splitCount)) return;
-
-        // Can split, creates new hand, places 2nd card in new hand,
-        Card cardToMove = hand.removeSecondCard();
-        Hand newHand = new Hand();
-        newHand.addCardToHand(cardToMove);
-
-        // Add the new hand to the player's list of hands
-        this.hands.add(newHand);
-
-        // Increment split count
-        this.increaseSplitCount();
-    }
 }

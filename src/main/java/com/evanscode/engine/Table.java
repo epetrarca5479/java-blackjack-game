@@ -32,7 +32,7 @@ public class Table {
     }
 
     // Method for modifying betting limits
-    public void changeBetLimit(String limitType, int limit) {
+    public void setBetLimit(String limitType, int limit) {
         if (limitType.equals("max")) {
             betMaximum = limit;
         } else if (limitType.equals("min")) {
@@ -48,6 +48,21 @@ public class Table {
         } else {
             throw new IllegalStateException("Table is full");
         }
+    }
+
+    // Method to remove a Player object from the table
+    public void removePlayer(final Player player) {
+        if (this.totalPlayers > 0) {
+            this.players.remove(player);
+            this.totalPlayers--;
+        } else {
+            throw new IllegalStateException("Table is empty");
+        }
+    }
+
+    // Method to check if table is full
+    public Boolean isFull() {
+        return this.totalPlayers >= 7;
     }
 
     // Getter for a player at the table
