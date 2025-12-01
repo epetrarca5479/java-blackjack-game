@@ -3,74 +3,69 @@ package com.evanscode.engine;
 import java.util.ArrayList;
 import java.util.List;
 
-// Class to represent a hand of cards held by a player or dealer
 public class Hand {
     private final List<Card> hand;
 
-    // Constructor for a player's "Hand" of cards
     public Hand() {
         this.hand = new ArrayList<>();
     }
 
-    // Add card to current hand
     public void addCardToHand(final Card newCard) {
         this.hand.add(newCard);
     }
 
-    // Get the value of current hand
     public int getHandTotal() {
         int total = 0;
+        int aces = 0;
 
         for (Card card : this.hand) {
-            total += card.getRankValue();
+            int value = card.value();
+            if (value == 11) aces++;
+            total += value;
         }
+
+        // Adjust Aces downward
+        while (total > 21 && aces > 0) {
+            total -= 10;
+            aces--;
+        }
+
         return total;
     }
 
-    // Clear a hand
     public void emptyHand() {
         this.hand.clear();
     }
 
-    // Remove 2nd card
     public Card removeSecondCard() {
-        Card removedCard = this.hand.get(1);
-        this.hand.remove(1);
-        return removedCard;
+        if (this.hand.size() < 2) return null;
+        return this.hand.remove(1);
     }
 
-    // Checks for blackjack hand
     public boolean hasBlackJack() {
-        if (this.hand.size() == 2) {
-            int total = 0;
-            for (Card card : this.hand) {
-                total += card.getRankValue();
-            }
-            return total == 21;
-        } else {
-            return false;
-        }
+        return this.hand.size() == 2 && getHandTotal() == 21;
     }
 
-    // Checks for a possible split hand
-    public Boolean canSplit(final int splitCount) {
-        if (this.hand.size() != 2) return false; //must be a hand of 2 cards
-        if (splitCount >= 3) return false; //max split of 4
+    public boolean canSplit(final int splitCount) {
+        if (this.hand.size() != 2) return false;
+        if (splitCount >= 3) return false;
 
-        Card c1 = this.hand.get(0); //Get first card
-        Card c2 = this.hand.get(1); //Get second card
+        Card c1 = this.hand.get(0);
+        Card c2 = this.hand.get(1);
 
-        // Returns result when comparing card 1 to card 2s rank
-        return c1.getCardRank().equals(c2.getCardRank());
+        // If you want rank-based matching:
+        return c1.rank().equals(c2.rank());
+
+        // OR, if you want 10-value split rules:
+        // return c1.value() == c2.value();
     }
 
-    // Returns the hand as a String
     public String getCards() {
         return this.hand.toString();
     }
 
-    // Returns the second card in a hand
     public Card getSecondCard() {
+        if (this.hand.size() < 2) return null;
         return this.hand.get(1);
     }
 }

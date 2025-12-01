@@ -1,45 +1,67 @@
 package com.evanscode.engine;
 
-import java.util.Stack;
+import java.util.ArrayDeque;
+import java.util.Deque;
 
-// A shoe is a combination and shuffled stack of multiple decks of cards. (A shoe will usually have 4-8 decks)
-// More decks in a shoe result in an increased "House" edge. (Additionally makes it harder to count cards)
+/**
+ * Represents a shoe of multiple shuffled decks used in Blackjack.
+ * Typically, 4–8 decks.
+ */
 public class Shoe {
+
+    /* =============================================================
+       ========================   FIELDS   ===========================
+       ============================================================= */
+
     private final int numDecks;
+    private final Deque<Card> cards;
 
-    // Multiple decks will be used to build the stack of cards
-    private final Stack<Card> shoe;
+    /* =============================================================
+       =====================   CONSTRUCTOR   =========================
+       ============================================================= */
 
-    // Shoe constructor that takes in an int for number of decks to use. Also initializes the shoe stack.
-    public Shoe(final int numDecks) {
+    public Shoe(int numDecks) {
         this.numDecks = numDecks;
-        this.shoe = new Stack<>();
-        this.buildShoe();
+        this.cards = new ArrayDeque<>();
+        buildShoe();
     }
 
-    // Remove and return a card from the top of the stack
-    public Card getNextCard() {
-        return this.shoe.pop();
-    }
+    /* =============================================================
+       =====================   SHOE BUILDING   =======================
+       ============================================================= */
 
-    // Creates deck(s) and add cards from deck(s) to the Shoe
+    /** Builds the shoe by creating and shuffling decks. */
     private void buildShoe() {
-        for (int i = 0; i < this.numDecks; i++) {
+        for (int i = 0; i < numDecks; i++) {
             Deck deck = new Deck();
-            deck.addCardsToDeck();
-            deck.shuffleDeck();
-            for (int j = 0; j < deck.getDeckSize(); j++) {
-                this.shoe.add(deck.getCardFromDeck(j));
+            deck.shuffle();
+
+            for (int j = 0; j < deck.size(); j++) {
+                cards.add(deck.get(j));
             }
         }
     }
 
+    /* =============================================================
+       ======================   CARD DRAWING   =======================
+       ============================================================= */
 
-    // Overriding the toString() method.
+    /** Draws and removes the next card from the shoe. */
+    public Card draw() {
+        return cards.removeFirst();
+    }
+
+    /** Number of cards remaining in the shoe. */
+    public int size() {
+        return cards.size();
+    }
+
+    /* =============================================================
+       =========================   DEBUG   ============================
+       ============================================================= */
+
     @Override
-    public java.lang.String toString() {
-        return "Shoe{" + "numDecks=" + this.numDecks + ", shoe=" + this.shoe + '}';
+    public String toString() {
+        return "Shoe{numDecks=" + numDecks + ", cardsRemaining=" + cards.size() + "}";
     }
 }
-
-

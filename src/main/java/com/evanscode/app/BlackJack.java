@@ -37,19 +37,19 @@ public class BlackJack {
         }
 
         // Get bets
-        System.out.println("Current betting limits\nMin: " + formatCurrency.format(table.getBetLimit("min")) + "\nMax: " + formatCurrency.format(table.getBetLimit("max")));
+        System.out.println("Current betting limits\nMin: " + formatCurrency.format(table.getBetMinimum()) + "\nMax: " + formatCurrency.format(table.getBetMaximum()));
         for (int i = 0; i < numCurrentPlayers; i++) {
             //Set each player back to active
             table.getPlayer(i).setActive(true);
 
             //Check if player has enough money in wallet for minimum bet.
-            if (table.getPlayer(i).getChips() < table.getBetLimit("min")) {
+            if (table.getPlayer(i).getChips() < table.getBetMinimum()) {
                 System.out.println(table.getPlayer(i).getName() + " has insufficient chips. Skipping turn...");
                 table.getPlayer(i).setActive(false);
             } else {
                 System.out.println(table.getPlayer(i).getName() + " please place your bet: ");
                 final int bet = scan.nextInt();
-                table.setBets(i, bet);
+                table.setPlayerBet(i, bet);
                 house.addChips(bet);
             }
         }
@@ -57,7 +57,7 @@ public class BlackJack {
         //Deal cards to each active player and also the dealer
         for (int j = 0; j < 2; j++) {
             for (int i = 0; i < numCurrentPlayers; i++) {
-                if (table.getPlayer(i).getActive()) {
+                if (table.getPlayer(i).isActive()) {
                     table.dealCard(i, 0);
                 }
             }
@@ -65,9 +65,9 @@ public class BlackJack {
         }
 
         //If dealer shows an ace ask if player wants insurance
-        if (table.showDealerCard().getCardRank().equals("A")) {
+        if (table.showDealerCard().value() == 1) {
             for (int i = 0; i < numCurrentPlayers; i++) {
-                if (table.getPlayer(i).getActive()) {
+                if (table.getPlayer(i).isActive()) {
                     System.out.println(table.getPlayer(i).getName() + ", would you like to buy insurance? (Enter Y for yes and N for no)");
                     String answer = scan.next();
                     if (answer.equalsIgnoreCase("Y")) {
@@ -76,7 +76,6 @@ public class BlackJack {
                         while (!valid) {
                             System.out.print("Enter insurance bet (max $" + (table.getPlayer(i).getBet() / 2.0) + "): ");
                             insuranceBet = scan.nextDouble();
-
                             valid = table.getPlayer(i).isValidInsuranceBet(insuranceBet, table.getPlayer(i).getBet(), table.getPlayer(i).getChips());
                         }
                         table.getPlayer(i).buyInsurance(insuranceBet);
@@ -87,7 +86,7 @@ public class BlackJack {
         }
 
         //Check Dealer 21
-        final Hand potentialDealerBJ = table.getDealerCards();
+        final Hand potentialDealerBJ = table.getDealerHand();
 
         //Dealer has BJ
         if (potentialDealerBJ.hasBlackJack()) {
@@ -100,17 +99,15 @@ public class BlackJack {
                 }
                 //Player missing a BJ
                 else {
-                    //Dealer Wins; Check for insurance / Remove chips from player hand
-                    if (table.getPlayer(i).getInsurance() == 0) {
-                        table.getPlayer(i).removeChips(table.getPlayer(i).getBet());
-                    } else {
+                    //Dealer Wins; Check for insurance
+                    if (table.getPlayer(i).getInsurance() != 0) {
                         double insurancePayout = table.getPlayer(i).getInsurance() * 2;
                         table.getPlayer(i).addChips(insurancePayout);
                         System.out.println("Balance: " + table.getPlayer(i).getChips());
                     }
                 }
             }
-            // Clear Hands
+            //Clear Hands
             table.clearDealerHand();
             for (int i = 0; i < numCurrentPlayers; i++) {
                 for (int j = 0; j < table.getPlayer(j).getHandCount(); j++)
@@ -123,7 +120,7 @@ public class BlackJack {
                 //Check player blackjack
                 if (table.getPlayer(i).getHand(0).hasBlackJack()) {
                     //Award player chips immediately, player turn ends
-                    double winnings = 1.5 * table.getPlayer(i).getBet();
+                    double winnings = 2.5 * table.getPlayer(i).getBet(); //regular hand win pays 2:1, blackjack pays
                     table.getPlayer(i).addChips(winnings);
                     table.getPlayer(i).setActive(false);
                 }
@@ -132,7 +129,7 @@ public class BlackJack {
                 for (int j = 0; j < table.getPlayer(i).getHandCount(); j++) {
 
                     //Initialize player options
-                    ArrayList<String> options = new ArrayList<String>() {{
+                    ArrayList<String> options = new ArrayList<>() {{
                         add("hit");
                         add("stand");
                         add("split");
@@ -140,27 +137,27 @@ public class BlackJack {
                     }};
 
                     //Check if able to split
-                    if (!table.getPlayer(i).getHand(j).canSplit(table.getPlayer(i).getSplitCount())) {
+                    if(!table.getPlayer(i).getHand(j).canSplit(table.getPlayer(i).getHandCount())) {
                         options.remove("split");
                     }
                     //Check if able to double down
-                    if (table.getPlayer(i).getBet() < table.getPlayer(i).getChips()) {
+                    if(table.getPlayer(i).getBet() < table.getPlayer(i).getChips()) {
                         options.remove("double");
                     }
 
                     while (keepPlaying) {
-                        //Display current hand
+                        //Display current hands
                         System.out.println(
-                            "Player: " + table.getPlayer(i).getName() + "\n" +
+                            "Player: " + table.getPlayer(i).getName() +"\n" +
                             "Hand: " + table.getPlayer(i).getHand(j).getCards() + "\n" +
                             "Hand Total: " + table.getPlayer(i).getHand(j).getHandTotal() + "\n" +
                             "Dealers Card: " + table.showDealerCard() + "\n" +
-                            "Dealer Total: " + table.showDealerCard().getRankValue() + "\n\n " +
-                            "What would you like to do: " + options.toString()
+                            "Dealer Total: " + table.showDealerCard().value() + "\n\n " +
+                            "What would you like to do: " + options
                         );
 
                         //Get player options
-                        scan.next()
+                        //scan.next()
                     }
                 }
             }
