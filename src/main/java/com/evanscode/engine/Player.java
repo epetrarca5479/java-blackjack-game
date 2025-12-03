@@ -3,158 +3,138 @@ package com.evanscode.engine;
 import java.util.ArrayList;
 import java.util.List;
 
-// Represents a blackjack player
 public class Player {
-
-    /* =============================================================
-       ===============   FIELDS & PLAYER STATE   ====================
-       ============================================================= */
 
     private final String name;
     private double chips;
 
+    // A player may have multiple hands due to splits
     private final List<Hand> hands;
-    private int currentHandIndex;
+    private final List<Double> bets;  // bet per hand
 
-    private double bet;
-    private double insurance;
-
-    private String decision;
+    // Insurance only applies to the original first hand
+    private double insuranceBet;
+    private boolean hasInsurance;
     private boolean isActive;
-    private int handCount;
 
-    /* =============================================================
-       ====================   CONSTRUCTOR   =========================
-       ============================================================= */
-
-    public Player(final String name, final int chips) {
+    public Player(String name, double chips) {
         this.name = name;
         this.chips = chips;
-
         this.hands = new ArrayList<>();
-        this.hands.add(new Hand());    // Start with one default hand
-
-        this.currentHandIndex = 0;
+        this.bets = new ArrayList<>();
         this.isActive = true;
-        this.handCount = 0;
-        this.insurance = 0;
+        this.insuranceBet = 0;
+        this.hasInsurance = false;
     }
 
-    /* =============================================================
-       =====================   HAND LOGIC   =========================
-       ============================================================= */
+    // --- HAND MANAGEMENT ---
 
-    public Hand getHand(final int index) {
-        return this.hands.get(index);
+    public void addHand(Hand hand, double bet) {
+        this.hands.add(hand);
+        this.bets.add(bet);
+        this.chips -= bet;
     }
 
-    public void clearHand(int handIndex) {
-        this.hands.get(handIndex).emptyHand();
+    public Hand getHand(int index) {
+        return hands.get(index);
     }
 
-    public void addCard(final Card card, final int handIndex) {
-        this.hands.get(handIndex).addCardToHand(card);
+    public double getBet(int index) {
+        return bets.get(index);
     }
 
-    public int getCurrentHandIndex() {
-        return this.currentHandIndex;
-    }
-
-    public void setCurrentHandIndex(final int handIndex) {
-        this.currentHandIndex = handIndex;
-    }
-
-    public void resetHandCount() {
-        this.handCount = 0;
-    }
-
-    public void increaseHandCount() {
-        this.handCount++;
+    public void setBet(int index, double amount) {
+        bets.set(index, amount);
     }
 
     public int getHandCount() {
-        return this.handCount;
+        return hands.size();
     }
 
-    /* =============================================================
-       ===================   BETTING LOGIC   ========================
-       ============================================================= */
-
-    public double getBet() {
-        return this.bet;
+    public List<Hand> getHands() {
+        return hands;
     }
 
-    /** Sets bet and immediately deducts chips. */
-    public void setBet(final double bet) {
-        this.bet = bet;
-        removeChips(bet);
+    public void clearHands() {
+        hands.clear();
+        bets.clear();
+        clearInsurance();
     }
 
-    public void buyInsurance(final double insuranceBet) {
-        removeChips(insuranceBet);
-        this.insurance = insuranceBet;
+    // --- SPLITTING ---
+
+    public void splitHand(final int index) {
+        Hand original = hands.get(index);
+        double originalBet = bets.get(index);
+
+        // Card to move to new hand
+        Card secondCard = original.removeSecondCard();
+
+        // Create new split hand
+        Hand newHand = new Hand();
+        newHand.addCardToHand(secondCard);
+
+        // Each hand keeps original bet
+        hands.add(newHand);
+        bets.add(originalBet);
+
+        // Deduct chips for second bet
+        chips -= originalBet;
     }
 
-    public boolean isValidInsuranceBet(double insuranceBet, double originalBet, double balance) {
-        double maxInsurance = originalBet / 2.0;
+    // --- INSURANCE LOGIC ---
 
-        if (insuranceBet <= 0) {
-            System.out.println("❌ Insurance bet must be greater than zero.");
-            return false;
-        }
-        if (insuranceBet > maxInsurance) {
-            System.out.println("❌ Insurance bet cannot exceed half your original bet (" + maxInsurance + ").");
-            return false;
-        }
-        if (insuranceBet > balance) {
-            System.out.println("❌ You don't have enough balance for that bet.");
-            return false;
-        }
-
+    public boolean isValidInsuranceBet(double insuranceBet, double mainBet, double chipsAvailable) {
+        if (insuranceBet <= 0) return false;
+        if (insuranceBet > mainBet / 2.0) return false;
+        if (insuranceBet > chipsAvailable) return false;
         return true;
     }
 
-    public double getInsurance() {
-        return this.insurance;
+    public void placeInsurance(double insuranceBet) {
+        this.insuranceBet = insuranceBet;
+        this.hasInsurance = true;
+        this.chips -= insuranceBet;
     }
 
-    /* =============================================================
-       ===================   CHIP MANAGEMENT   ======================
-       ============================================================= */
+    public boolean hasInsurance() {
+        return hasInsurance;
+    }
+
+    public double getInsuranceBet() {
+        return insuranceBet;
+    }
+
+    public void payInsuranceWin() {
+        // Player gets their insurance bet back + 2:1 payout
+        chips += (insuranceBet * 3);
+        clearInsurance();
+    }
+
+    public void loseInsurance() {
+        clearInsurance();
+    }
+
+    public void clearInsurance() {
+        insuranceBet = 0;
+        hasInsurance = false;
+    }
+
+    // --- CHIPS ---
 
     public double getChips() {
-        return this.chips;
+        return chips;
     }
 
-    public void removeChips(final double amount) {
-        this.chips -= amount;
+    public void addChips(double amount) {
+        chips += amount;
     }
-
-    public void addChips(final double amount) {
-        this.chips += amount;
-    }
-
-    /* =============================================================
-       ===================   PLAYER STATE   =========================
-       ============================================================= */
 
     public String getName() {
-        return this.name;
+        return name;
     }
 
-    public boolean isActive() {
-        return this.isActive;
-    }
-
-    public void setActive(boolean active) {
-        this.isActive = active;
-    }
-
-    public String getDecision() {
-        return this.decision;
-    }
-
-    public void setDecision(final String decision) {
-        this.decision = decision;
+    public void setActive(final boolean isActive) {
+        this.isActive = isActive;
     }
 }

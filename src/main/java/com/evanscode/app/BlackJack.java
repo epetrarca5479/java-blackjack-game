@@ -8,9 +8,6 @@ import java.util.Scanner;
 
 public class BlackJack {
 
-    // loop variable to continue playing (add while loop later)
-    static boolean keepPlaying = true;
-
     // Main method for BlackJack game
     public static void main(String[] args) {
 
@@ -49,7 +46,7 @@ public class BlackJack {
             } else {
                 System.out.println(table.getPlayer(i).getName() + " please place your bet: ");
                 final int bet = scan.nextInt();
-                table.setPlayerBet(i, bet);
+                table.getPlayer(i).placeInitialBet(bet);
                 house.addChips(bet);
             }
         }
@@ -74,10 +71,13 @@ public class BlackJack {
                         double insuranceBet = 0;
                         boolean valid = false;
                         while (!valid) {
-                            System.out.print("Enter insurance bet (max $" + (table.getPlayer(i).getBet() / 2.0) + "): ");
+                            System.out.print("Enter insurance bet (max $" + (table.getPlayer(i).getHand(0).getBet() / 2.0) + "): ");
                             insuranceBet = scan.nextDouble();
-                            valid = table.getPlayer(i).isValidInsuranceBet(insuranceBet, table.getPlayer(i).getBet(), table.getPlayer(i).getChips());
-                        }
+                            valid = table.getPlayer(i).isValidInsuranceBet(
+                                    insuranceBet,
+                                    table.getPlayer(i).getHand(0).getBet(),
+                                    table.getPlayer(i).getChips()
+                            );                        }
                         table.getPlayer(i).buyInsurance(insuranceBet);
                         house.addChips(insuranceBet);
                     }
@@ -111,7 +111,7 @@ public class BlackJack {
             table.clearDealerHand();
             for (int i = 0; i < numCurrentPlayers; i++) {
                 for (int j = 0; j < table.getPlayer(j).getHandCount(); j++)
-                    table.getPlayer(i).clearHand(j);
+                    table.getPlayer(i).clearHands();
             }
         } else {
             //Each player plays round
@@ -120,32 +120,32 @@ public class BlackJack {
                 //Check player blackjack
                 if (table.getPlayer(i).getHand(0).hasBlackJack()) {
                     //Award player chips immediately, player turn ends
-                    double winnings = 2.5 * table.getPlayer(i).getBet(); //regular hand win pays 2:1, blackjack pays
+                    double winnings = 2.5 * table.getPlayer(i).getBet(0); //regular hand win pays 2:1, blackjack pays
                     table.getPlayer(i).addChips(winnings);
                     table.getPlayer(i).setActive(false);
                 }
 
                 //Player plays hand(s)
                 for (int j = 0; j < table.getPlayer(i).getHandCount(); j++) {
-
-                    //Initialize player options
-                    ArrayList<String> options = new ArrayList<>() {{
-                        add("hit");
-                        add("stand");
-                        add("split");
-                        add("double down");
-                    }};
-
-                    //Check if able to split
-                    if(!table.getPlayer(i).getHand(j).canSplit(table.getPlayer(i).getHandCount())) {
-                        options.remove("split");
-                    }
-                    //Check if able to double down
-                    if(table.getPlayer(i).getBet() < table.getPlayer(i).getChips()) {
-                        options.remove("double");
-                    }
-
+                    //Player turn loops until not able to make another move or stands a hand
                     while (keepPlaying) {
+                        //Sets player options
+                        ArrayList<String> options = new ArrayList<>() {{
+                            add("hit");
+                            add("stand");
+                            add("split");
+                            add("double down");
+                        }};
+
+                        //Check if able to split
+                        if(!table.getPlayer(i).canSplit(table.getPlayer(i).getHand(j))) {
+                            options.remove("split");
+                        }
+                        //Check if able to double down
+                        if(!table.getPlayer(i).canDoubleDown()) {
+                            options.remove("double");
+                        }
+
                         //Display current hands
                         System.out.println(
                             "Player: " + table.getPlayer(i).getName() +"\n" +
@@ -156,12 +156,23 @@ public class BlackJack {
                             "What would you like to do: " + options
                         );
 
-                        //Get player options
-                        //scan.next()
+                        //Set player options
+                        table.getPlayer(i).setDecision(scan.next());
+
+                        switch(table.getPlayer(i).getDecision()){
+                            case "hit":
+                                table.dealCard(i, table.getPlayer(i).getCurrentHandIndex());
+                            case "stand":
+                                return;
+                            case "split":
+                                table.getPlayer(i).splitHand(j);
+                            case "double":
+                                table.getPlayer(i).
+                                table.dealCard(i, table.getPlayer(i).getCurrentHandIndex());
+                        }
                     }
                 }
             }
         }
-        //Code to check if we should keep playing
     }
 }

@@ -51,10 +51,10 @@ public class Shoe {
         return cards.removeFirst();
     }
 
-    /** Number of cards remaining in the shoe. */
+    /** Number of cards remaining in the shoe.
     public int size() {
         return cards.size();
-    }
+    }*/
 
     /* =============================================================
        =========================   DEBUG   ============================
