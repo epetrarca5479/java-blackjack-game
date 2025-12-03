@@ -1,7 +1,6 @@
 package com.evanscode.engine;
 
-import java.util.ArrayDeque;
-import java.util.Deque;
+import java.util.*;
 
 /**
  * Represents a shoe of multiple shuffled decks used in Blackjack.
@@ -9,59 +8,40 @@ import java.util.Deque;
  */
 public class Shoe {
 
-    /* =============================================================
-       ========================   FIELDS   ===========================
-       ============================================================= */
-
-    private final int numDecks;
+    /** FIELDS */
+    private final int deckCount;
     private final Deque<Card> cards;
 
-    /* =============================================================
-       =====================   CONSTRUCTOR   =========================
-       ============================================================= */
-
-    public Shoe(int numDecks) {
-        this.numDecks = numDecks;
+    /** CONSTRUCTOR */
+    public Shoe(int deckCount) {
+        this.deckCount = deckCount;
         this.cards = new ArrayDeque<>();
-        buildShoe();
-    }
+        List<Card> tempCards = new ArrayList<>();
 
-    /* =============================================================
-       =====================   SHOE BUILDING   =======================
-       ============================================================= */
+        /* Create and combine decks of cards */
+        for (int i = 0; i < deckCount; i++) {
+            tempCards.addAll(new Deck().getCards());
+        }
 
-    /** Builds the shoe by creating and shuffling decks. */
-    private void buildShoe() {
-        for (int i = 0; i < numDecks; i++) {
-            Deck deck = new Deck();
-            deck.shuffle();
+        /* Shuffle the combined decks */
+        Collections.shuffle(tempCards);
 
-            for (int j = 0; j < deck.size(); j++) {
-                cards.add(deck.get(j));
-            }
+        /* Load cards into shoe */
+        for (Card card : tempCards) {
+            cards.addLast(card);
         }
     }
-
-    /* =============================================================
-       ======================   CARD DRAWING   =======================
-       ============================================================= */
-
     /** Draws and removes the next card from the shoe. */
     public Card draw() {
         return cards.removeFirst();
     }
-
     /** Number of cards remaining in the shoe. */
     public int size() {
         return cards.size();
     }
-
-    /* =============================================================
-       =========================   DEBUG   ============================
-       ============================================================= */
-
+    /** DEBUG */
     @Override
     public String toString() {
-        return "Shoe{numDecks=" + numDecks + ", cardsRemaining=" + cards.size() + "}";
+        return "Shoe{numDecks=" + deckCount + ", cardsRemaining=" + cards.size() + "}";
     }
 }

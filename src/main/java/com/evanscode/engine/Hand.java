@@ -3,18 +3,37 @@ package com.evanscode.engine;
 import java.util.ArrayList;
 import java.util.List;
 
+/** Class to represent a players hand in a game of blackjack */
 public class Hand {
-    private final List<Card> hand;
 
-    public Hand() {
+    /** FIELDS */
+    private final List<Card> hand;
+    private double bet;
+
+    /** CONSTRUCTOR */
+    public Hand(final double bet) {
         this.hand = new ArrayList<>();
+        this.bet = bet;
     }
 
-    public void addCardToHand(final Card newCard) {
+    /** Adding card to a hand */
+    public void addCard(final Card newCard) {
         this.hand.add(newCard);
     }
 
-    public int getHandTotal() {
+    /** Get a hand's cards as a toString */
+    public String getCards() {
+        return this.hand.toString();
+    }
+
+    /** Get the second card in a hand */
+    public Card getSecondCard() {
+        if (this.hand.size() < 2) return null;
+        return this.hand.get(1);
+    }
+
+    /** Getting a hands total  */
+    public int getTotal() {
         int total = 0;
         int aces = 0;
 
@@ -24,7 +43,7 @@ public class Hand {
             total += value;
         }
 
-        // Adjust Aces downward
+        /* Adjust Aces downward */
         while (total > 21 && aces > 0) {
             total -= 10;
             aces--;
@@ -33,19 +52,18 @@ public class Hand {
         return total;
     }
 
-    public void emptyHand() {
+    /** Clearing a hand */
+    public void clear() {
         this.hand.clear();
+        this.bet = 0;
     }
 
-    public Card removeSecondCard() {
-        if (this.hand.size() < 2) return null;
-        return this.hand.remove(1);
-    }
-
+    /** Checking for blackjack */
     public boolean hasBlackJack() {
-        return this.hand.size() == 2 && getHandTotal() == 21;
+        return this.hand.size() == 2 && getTotal() == 21;
     }
 
+    /** Checking if a hand can be split */
     public boolean canSplit(final int splitCount) {
         if (this.hand.size() != 2) return false;
         if (splitCount >= 3) return false;
@@ -53,19 +71,27 @@ public class Hand {
         Card c1 = this.hand.get(0);
         Card c2 = this.hand.get(1);
 
-        // If you want rank-based matching:
+        /* For rank-based matching */
         return c1.rank().equals(c2.rank());
 
-        // OR, if you want 10-value split rules:
-        // return c1.value() == c2.value();
+        /* For 10-value split rules
+        return c1.value() == c2.value();*/
     }
 
-    public String getCards() {
-        return this.hand.toString();
+    /** Remove the second card from a hand */
+    public void removeSecondCard() {
+        if (this.hand.size() == 2) {
+            this.hand.remove(1);
+        }
     }
 
-    public Card getSecondCard() {
-        if (this.hand.size() < 2) return null;
-        return this.hand.get(1);
+    /** Place a hand's bet */
+    public void setBet(final double bet) {
+        this.bet = bet;
+    }
+
+    /** Get a hand's bet */
+    public double getBet() {
+        return this.bet;
     }
 }

@@ -17,8 +17,8 @@ public class BlackJack {
         // Declare variables
         Scanner scan = new Scanner(System.in);
         NumberFormat formatCurrency = NumberFormat.getCurrencyInstance();
-        House house = new House(10000);
-        Table table = new Table();
+        Casino casino = new Casino(10000, tables);
+        Table table = new Table(0);
 
         //Pick number of decks to use and build a Shoe (should be 1-4, and not based on player input, need to change later)
         System.out.println("How many decks to play in a shoe?");
@@ -49,8 +49,8 @@ public class BlackJack {
             } else {
                 System.out.println(table.getPlayer(i).getName() + " please place your bet: ");
                 final int bet = scan.nextInt();
-                table.setPlayerBet(i, bet);
-                house.addChips(bet);
+                table.getPlayer(i).getHand(0).setBet(bet);
+                casino.addChips(bet);
             }
         }
 
@@ -74,12 +74,12 @@ public class BlackJack {
                         double insuranceBet = 0;
                         boolean valid = false;
                         while (!valid) {
-                            System.out.print("Enter insurance bet (max $" + (table.getPlayer(i).getBet() / 2.0) + "): ");
+                            System.out.print("Enter insurance bet (max $" + (table.getPlayer(i).getHand(0).getBet() / 2.0) + "): ");
                             insuranceBet = scan.nextDouble();
-                            valid = table.getPlayer(i).isValidInsuranceBet(insuranceBet, table.getPlayer(i).getBet(), table.getPlayer(i).getChips());
+                            valid = table.getPlayer(i).canBuyInsurance(insuranceBet, table.getPlayer(i).getHand(0).getBet());
                         }
                         table.getPlayer(i).buyInsurance(insuranceBet);
-                        house.addChips(insuranceBet);
+                        casino.addChips(insuranceBet);
                     }
                 }
             }
@@ -108,11 +108,7 @@ public class BlackJack {
                 }
             }
             //Clear Hands
-            table.clearDealerHand();
-            for (int i = 0; i < numCurrentPlayers; i++) {
-                for (int j = 0; j < table.getPlayer(j).getHandCount(); j++)
-                    table.getPlayer(i).clearHand(j);
-            }
+            table.clearHands();
         } else {
             //Each player plays round
             for (int i = 0; i < numCurrentPlayers; i++) {
@@ -120,7 +116,7 @@ public class BlackJack {
                 //Check player blackjack
                 if (table.getPlayer(i).getHand(0).hasBlackJack()) {
                     //Award player chips immediately, player turn ends
-                    double winnings = 2.5 * table.getPlayer(i).getBet(); //regular hand win pays 2:1, blackjack pays
+                    double winnings = 2.5 * table.getPlayer(i).getHand(0).getBet(); //regular hand win pays 2:1, blackjack pays
                     table.getPlayer(i).addChips(winnings);
                     table.getPlayer(i).setActive(false);
                 }
@@ -141,7 +137,7 @@ public class BlackJack {
                         options.remove("split");
                     }
                     //Check if able to double down
-                    if(table.getPlayer(i).getBet() < table.getPlayer(i).getChips()) {
+                    if(table.getPlayer(i).getHand(j).getBet() < table.getPlayer(i).getChips()) {
                         options.remove("double");
                     }
 
@@ -150,7 +146,7 @@ public class BlackJack {
                         System.out.println(
                             "Player: " + table.getPlayer(i).getName() +"\n" +
                             "Hand: " + table.getPlayer(i).getHand(j).getCards() + "\n" +
-                            "Hand Total: " + table.getPlayer(i).getHand(j).getHandTotal() + "\n" +
+                            "Hand Total: " + table.getPlayer(i).getHand(j).getTotal() + "\n" +
                             "Dealers Card: " + table.showDealerCard() + "\n" +
                             "Dealer Total: " + table.showDealerCard().value() + "\n\n " +
                             "What would you like to do: " + options
