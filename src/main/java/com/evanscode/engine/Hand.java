@@ -6,11 +6,11 @@ import java.util.List;
 /** Class to represent a players hand in a game of blackjack */
 public class Hand {
 
-    /** FIELDS */
+    /** Fields */
     private final List<Card> hand;
     private double bet;
 
-    /** CONSTRUCTOR */
+    /** Constructor */
     public Hand(final double bet) {
         this.hand = new ArrayList<>();
         this.bet = bet;
@@ -38,7 +38,7 @@ public class Hand {
         int aces = 0;
 
         for (Card card : this.hand) {
-            int value = card.value();
+            int value = card.rankValue();
             if (value == 11) aces++;
             total += value;
         }

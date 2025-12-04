@@ -25,16 +25,16 @@ public class Table {
     }
 
     /** Getting and setting betting limits */
-    public int getBetMinimum() {
+    public double getBetMinimum() {
         return betMinimum;
     }
-    public int getBetMaximum() {
+    public double getBetMaximum() {
         return betMaximum;
     }
-    public void setBetMinimum(int amount) {
+    public void setBetMinimum(double amount) {
         this.betMinimum = amount;
     }
-    public void setBetMaximum(int amount) {
+    public void setBetMaximum(double amount) {
         this.betMaximum = amount;
     }
 
