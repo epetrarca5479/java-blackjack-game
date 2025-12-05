@@ -3,138 +3,132 @@ package com.evanscode.engine;
 import java.util.ArrayList;
 import java.util.List;
 
+/** Represents a blackjack player */
 public class Player {
 
+    /** FIELDS */
     private final String name;
     private double chips;
-
-    // A player may have multiple hands due to splits
     private final List<Hand> hands;
-    private final List<Double> bets;  // bet per hand
-
-    // Insurance only applies to the original first hand
-    private double insuranceBet;
-    private boolean hasInsurance;
     private boolean isActive;
+    private int handCount;
+    private double insurance;
+    private String decision;
 
-    public Player(String name, double chips) {
+    /** CONSTRUCTOR */
+    public Player(final String name, final int chips) {
         this.name = name;
         this.chips = chips;
         this.hands = new ArrayList<>();
-        this.bets = new ArrayList<>();
+        this.hands.add(new Hand(0));    // Start with one default hand
         this.isActive = true;
-        this.insuranceBet = 0;
-        this.hasInsurance = false;
+        this.handCount = 0;
+        this.insurance = 0;
+        this.decision = null;
     }
 
-    // --- HAND MANAGEMENT ---
-
-    public void addHand(Hand hand, double bet) {
-        this.hands.add(hand);
-        this.bets.add(bet);
-        this.chips -= bet;
+    /** Get a hand */
+    public Hand getHand(final int index) {
+        return this.hands.get(index);
     }
 
-    public Hand getHand(int index) {
-        return hands.get(index);
+    /** Clear a players hand(s) and some player variables */
+    public void clear() {
+        /* Clear player variables */
+        this.handCount = 0;
+        this.insurance = 0;
+        this.decision = null;
+
+        /* Clear hands */
+        for (Hand hand : this.hands) {
+            hand.clear();
+        }
     }
 
-    public double getBet(int index) {
-        return bets.get(index);
-    }
-
-    public void setBet(int index, double amount) {
-        bets.set(index, amount);
-    }
-
+    /** Get current count of hands a player has */
     public int getHandCount() {
-        return hands.size();
+        return this.handCount;
     }
 
-    public List<Hand> getHands() {
-        return hands;
+    /** Increment the hand count of a player */
+    public void incrementHandCount() {
+        this.handCount++;
     }
 
-    public void clearHands() {
-        hands.clear();
-        bets.clear();
-        clearInsurance();
+    public void buyInsurance(final double insuranceBet) {
+        removeChips(insuranceBet);
+        this.insurance = insuranceBet;
     }
 
-    // --- SPLITTING ---
+    /** Checks if insurance bet is allowed */
+    public boolean canBuyInsurance(double insuranceBet, double originalBet) {
+        double maxInsurance = originalBet / 2.0;
 
-    public void splitHand(final int index) {
-        Hand original = hands.get(index);
-        double originalBet = bets.get(index);
-
-        // Card to move to new hand
-        Card secondCard = original.removeSecondCard();
-
-        // Create new split hand
-        Hand newHand = new Hand();
-        newHand.addCardToHand(secondCard);
-
-        // Each hand keeps original bet
-        hands.add(newHand);
-        bets.add(originalBet);
-
-        // Deduct chips for second bet
-        chips -= originalBet;
-    }
-
-    // --- INSURANCE LOGIC ---
-
-    public boolean isValidInsuranceBet(double insuranceBet, double mainBet, double chipsAvailable) {
-        if (insuranceBet <= 0) return false;
-        if (insuranceBet > mainBet / 2.0) return false;
-        if (insuranceBet > chipsAvailable) return false;
+        /* Preventing a 0 from being entered when buying insurance */
+        if (insuranceBet <= 0) {
+            System.out.println("❌ Insurance bet must be greater than zero.");
+            return false;
+        }
+        /* Preventing an insurance bet greater than the amount initially bet */
+        if (insuranceBet > maxInsurance) {
+            System.out.println("❌ Insurance bet cannot exceed half your original bet (" + maxInsurance + ").");
+            return false;
+        }
+        /* Preventing a player from placing an insurance bet when chip balance is less than the desired insurance bet  */
+        if (!canBet(insuranceBet)) {
+            System.out.println("❌ You don't have enough balance for that bet.");
+            return false;
+        }
         return true;
     }
 
-    public void placeInsurance(double insuranceBet) {
-        this.insuranceBet = insuranceBet;
-        this.hasInsurance = true;
-        this.chips -= insuranceBet;
+    /** Get a player's insurance bet */
+    public double getInsurance() {
+        return this.insurance;
     }
 
-    public boolean hasInsurance() {
-        return hasInsurance;
-    }
-
-    public double getInsuranceBet() {
-        return insuranceBet;
-    }
-
-    public void payInsuranceWin() {
-        // Player gets their insurance bet back + 2:1 payout
-        chips += (insuranceBet * 3);
-        clearInsurance();
-    }
-
-    public void loseInsurance() {
-        clearInsurance();
-    }
-
-    public void clearInsurance() {
-        insuranceBet = 0;
-        hasInsurance = false;
-    }
-
-    // --- CHIPS ---
-
+    /** Get a player's chip balance */
     public double getChips() {
-        return chips;
+        return this.chips;
     }
 
-    public void addChips(double amount) {
-        chips += amount;
+    /** Deducts an amount from the player's chip balance */
+    public void removeChips(final double amount) {
+        this.chips -= amount;
     }
 
+    /** Add an amount to the player's chip balance */
+    public void addChips(final double amount) {
+        this.chips += amount;
+    }
+
+    /** Get a player's name */
     public String getName() {
-        return name;
+        return this.name;
     }
 
-    public void setActive(final boolean isActive) {
-        this.isActive = isActive;
+    /** Get a player's activity */
+    public boolean isActive() {
+        return this.isActive;
+    }
+
+    /** Set a player's name */
+    public void setActive(boolean active) {
+        this.isActive = active;
+    }
+
+    /** Get a player's decision */
+    public String getDecision() {
+        return this.decision;
+    }
+
+    /** Set a player's name */
+    public void setDecision(final String decision) {
+        this.decision = decision;
+    }
+
+    /** Determine if a player can place a bet for a hand */
+    public boolean canBet(final double amount) {
+        return this.chips >= amount;
     }
 }
