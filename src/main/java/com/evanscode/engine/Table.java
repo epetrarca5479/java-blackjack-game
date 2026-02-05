@@ -24,6 +24,10 @@ public class Table {
         setBetMaximum(maxBet);
     }
 
+    public int getTableID() {
+        return this.tableID;
+    }
+
     /** Getting and setting betting limits */
     public double getBetMinimum() {
         return betMinimum;

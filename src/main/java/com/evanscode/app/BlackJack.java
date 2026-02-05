@@ -17,8 +17,8 @@ public class BlackJack {
         // Declare variables
         Scanner scan = new Scanner(System.in);
         NumberFormat formatCurrency = NumberFormat.getCurrencyInstance();
-        Casino casino = new Casino(10000, tables);
-        Table table = new Table(0);
+        Casino casino = new Casino(10000);
+        Table table = new Table(0, 10, 1000);
 
         //Pick number of decks to use and build a Shoe (should be 1-4, and not based on player input, need to change later)
         System.out.println("How many decks to play in a shoe?");
@@ -47,9 +47,13 @@ public class BlackJack {
                 System.out.println(table.getPlayer(i).getName() + " has insufficient chips. Skipping turn...");
                 table.getPlayer(i).setActive(false);
             } else {
-                System.out.println(table.getPlayer(i).getName() + " please place your bet: ");
-                final int bet = scan.nextInt();
+                int bet = scan.nextInt();
+                while (bet < table.getBetMinimum() || bet > table.getBetMaximum()) {
+                    System.out.println(table.getPlayer(i).getName() + " please place a valid bet: ");
+                    bet = scan.nextInt();
+                }
                 table.getPlayer(i).getHand(0).setBet(bet);
+                table.getPlayer(i).removeChips(bet);
                 casino.addChips(bet);
             }
         }
@@ -65,7 +69,7 @@ public class BlackJack {
         }
 
         //If dealer shows an ace ask if player wants insurance
-        if (table.showDealerCard().value() == 1) {
+        if (table.showDealerCard().rankName().equals("Ace")) {
             for (int i = 0; i < numCurrentPlayers; i++) {
                 if (table.getPlayer(i).isActive()) {
                     System.out.println(table.getPlayer(i).getName() + ", would you like to buy insurance? (Enter Y for yes and N for no)");
@@ -137,8 +141,8 @@ public class BlackJack {
                         options.remove("split");
                     }
                     //Check if able to double down
-                    if(table.getPlayer(i).getHand(j).getBet() < table.getPlayer(i).getChips()) {
-                        options.remove("double");
+                    if(table.getPlayer(i).getHand(j).getBet() > table.getPlayer(i).getChips()) {
+                        options.remove("double down");
                     }
 
                     while (keepPlaying) {
@@ -148,7 +152,7 @@ public class BlackJack {
                             "Hand: " + table.getPlayer(i).getHand(j).getCards() + "\n" +
                             "Hand Total: " + table.getPlayer(i).getHand(j).getTotal() + "\n" +
                             "Dealers Card: " + table.showDealerCard() + "\n" +
-                            "Dealer Total: " + table.showDealerCard().value() + "\n\n " +
+                            "Dealer Total: " + table.showDealerCard().rankValue() + "\n\n " +
                             "What would you like to do: " + options
                         );
 

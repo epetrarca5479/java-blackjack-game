@@ -11,7 +11,6 @@ public class Player {
     private double chips;
     private final List<Hand> hands;
     private boolean isActive;
-    private int handCount;
     private double insurance;
     private String decision;
 
@@ -22,7 +21,6 @@ public class Player {
         this.hands = new ArrayList<>();
         this.hands.add(new Hand(0));    // Start with one default hand
         this.isActive = true;
-        this.handCount = 0;
         this.insurance = 0;
         this.decision = null;
     }
@@ -35,7 +33,6 @@ public class Player {
     /** Clear a players hand(s) and some player variables */
     public void clear() {
         /* Clear player variables */
-        this.handCount = 0;
         this.insurance = 0;
         this.decision = null;
 
@@ -47,12 +44,7 @@ public class Player {
 
     /** Get current count of hands a player has */
     public int getHandCount() {
-        return this.handCount;
-    }
-
-    /** Increment the hand count of a player */
-    public void incrementHandCount() {
-        this.handCount++;
+        return hands.size();
     }
 
     public void buyInsurance(final double insuranceBet) {
